@@ -1,0 +1,45 @@
+SiteMap Plugin for glFusion
+Version: 1.1.4
+
+For the latest documentation, please see
+
+	http://www.glfusion.org/wiki/doku.php?id=sitemap:start
+
+LICENSE
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+OVERVIEW
+
+The SiteMap plugin creates a Google compatible sitemap.xml file of your
+site's content.  It also provides an interactive Site Map for your site's
+users.
+
+SiteMap honors content permissions, only showing those items which the
+user has permissions to view.
+
+SYSTEM REQUIREMENTS
+
+SiteMap has the following system requirements:
+
+    * DataProxy Plugin v1.1.4
+    * PHP 4.3.3 and higher. Because of some security issues PHP 4.3.10 or
+      higher is strictly recommended. (PHP5 should be fine.)
+    * glFusion v1.1.2 or newer
+
+INSTALLATION
+
+The SiteMap  Plugin uses the glFusion automated plugin installer.
+Simply upload the distribtuion using the glFusion plugin installer located in
+the Plugin Administration page.
+
+UPGRADING
+
+The upgrade process is identical to the installation process, simply upload
+the distribution from the Plugin Administration page.
+
+CONFIGURATION
+
