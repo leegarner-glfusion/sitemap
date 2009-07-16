@@ -103,5 +103,6 @@ $LANG_SMAP = array (
 	'sp_type1'          => 'Only pages that appear on the center block',
 	'sp_type2'          => 'Only pages that do NOT appear on the center block',
 	'sp_except'         => 'IDs of pages that should not be listed on the sitemap (space separated)',
+	'back_to_top'       => 'Back to top',
 );
 ?>

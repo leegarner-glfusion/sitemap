@@ -160,21 +160,21 @@ function plugin_upgrade_sitemap() {
 					DB_query($sql, 1);
 				}
 			}
-			break;
-
+			// fall through on purpose...
 		case '1.0.1':
 		case '1.0.2':
 		case '1.0.3':
 		case '1.1.0':
 		case '1.1.1':
 		case '1.1.2':
-		case '1.1.3':	// This version doesn't exist
+		case '1.1.3':
 			require_once $_CONF['path'].'plugins/sitemap/sql/mysql_update-1.0.1_1.1.4.php';
 			COM_errorLog("Inserting default data into table", 1);
 			foreach ($DATA_101_TO_114 as $sql) {
 				DB_query($sql, 1);
 			}
-			break;
+        case '1.1.4' :
+            break;
 		default:
 			COM_errorLog('Sitemap: upgrade procedure for version ' . $pi_version . ' is not implemented in plugin_upgrade_sitemap().');
 			break;
@@ -433,9 +433,11 @@ function SITEMAP_createGoogleSitemap() {
 				}
 				$temp     = $dataproxy->$driver->getItemById($item['id']);
 				$raw  = $temp['raw_data'];
-				if ((($_SMAP_CONF['sp_type'] == 1) AND ($raw['sp_centerblock'] != 1))
-				 OR (($_SMAP_CONF['sp_type'] == 2) AND ($raw['sp_centerblock'] == 1))) {
-					continue;
+				if ( $raw['sp_centerblock'] == 1 ) {
+				    continue;
+				}
+				if ( $raw['sp_search'] != 1 ) {
+				    continue;
 				}
 			}
 

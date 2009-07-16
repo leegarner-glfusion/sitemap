@@ -88,6 +88,9 @@ function SITEMAP_getSelectForm($selected = 'all') {
 	$num_drivers = count($disp_orders);
 
 	for ($i = 1; $i <= $num_drivers; $i ++) {
+	    if ( !isset($disp_orders[$i]) ) {
+	        continue;
+	    }
 		$driver_name = $disp_orders[$i];
 		if (!isset($disp_orders[$i])
 				OR ($_SMAP_CONF['sitemap_' . $driver_name] === false)) {
@@ -127,7 +130,11 @@ function SITEMAP_buildItems(&$driver, $pid) {
 	$html = '';
 
 	$T->clear_var('items');
-	$sp_except = explode(' ', $_SMAP_CONF['sp_except']);
+	if ( isset($_SMAP_CONF['sp_except']) ) {
+    	$sp_except = explode(' ', $_SMAP_CONF['sp_except']);
+    } else {
+        $sp_except = array();
+    }
 
 	$items = $driver->getItems($pid);
 	$num_items = count($items);
@@ -141,9 +148,7 @@ function SITEMAP_buildItems(&$driver, $pid) {
 				}
 				$temp = $driver->getItemById($item['id']);
 				$raw  = $temp['raw_data'];
-				if ((($_SMAP_CONF['sp_type'] == 1) AND ($raw['sp_centerblock'] != 1))
-				 OR (($_SMAP_CONF['sp_type'] == 2) AND ($raw['sp_centerblock'] == 1))
-				 OR (($raw['sp_search'] != 1)) ) {
+				if ( $raw['sp_centerblock'] == 1 || $raw['sp_search'] != 1) {
 					$num_items --;
 					continue;
 				}
