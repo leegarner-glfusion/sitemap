@@ -175,6 +175,7 @@ function plugin_upgrade_sitemap() {
 				DB_query($sql, 1);
 			}
         case '1.1.4' :
+        case '1.1.5' :
             break;
 		default:
 			COM_errorLog('Sitemap: upgrade procedure for version ' . $pi_version . ' is not implemented in plugin_upgrade_sitemap().');
