@@ -94,11 +94,12 @@ function plugin_commentsupport_sitemap() {
 function plugin_cclabel_sitemap() {
     global $_CONF;
 
-	$pi_name   = SITEMAP_str('menu_label');
-	$admin_url = $_CONF['site_admin_url'] . '/plugins/sitemap/index.php';
-	$icon_url  = $_CONF['site_url'] . '/sitemap/images/sitemap.gif';
-
-    return array($pi_name, $admin_url, $icon_url);
+	if (SEC_hasRights('sitemap.admin')) {
+    	$pi_name   = SITEMAP_str('menu_label');
+    	$admin_url = $_CONF['site_admin_url'] . '/plugins/sitemap/index.php';
+    	$icon_url  = $_CONF['site_url'] . '/sitemap/images/sitemap.gif';
+        return array($pi_name, $admin_url, $icon_url);
+    }
 }
 
 /**
