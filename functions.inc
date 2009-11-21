@@ -253,37 +253,6 @@ function SITEMAP_saveConfig() {
 	}
 }
 
-/**
-* Returns encoding
-*/
-function SITEMAP_getEncodingt() {
-	global $_CONF, $LANG_CHARSET;
-
-	static $encoding = null;
-
-    $valid_charsets = array('iso-8859-1','iso-8859-15','utf-8','cp866','cp1251','cp1252','koi8-r','big5','gb2312','big5-hkscs','shift_jis sjis','euc-jp');
-
-	if ($encoding === null) {
-		if (isset($LANG_CHARSET)) {
-			$encoding = $LANG_CHARSET;
-		} else if (isset($_CONF['default_charset'])) {
-			$encoding = $_CONF['default_charset'];
-		} else {
-			$encoding = 'iso-8859-1';
-		}
-	}
-
-	$encoding = strtolower($encoding);
-
-	if ( in_array($encoding,$valid_charsets) ) {
-	    return $encoding;
-	} else {
-	    return 'iso-8859-1';
-	}
-
-
-	return $encoding;
-}
 
 /**
 * Escapes a string for HTML output
@@ -294,7 +263,7 @@ function SITEMAP_escape($str) {
 		array(   '<',    '>',     '&',      '"',      "'"),
 		$str
 	);
-	return htmlspecialchars($str, ENT_QUOTES, SITEMAP_getEncodingt());
+	return htmlspecialchars($str, ENT_QUOTES, COM_getEncodingt());
 }
 
 function SITEMAP_str($index, $noesc = false) {

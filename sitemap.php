@@ -51,7 +51,7 @@ $_SMAP_CONF = array();
 
 $_SMAP_CONF['pi_name']          = 'sitemap';
 $_SMAP_CONF['pi_display_name']  = 'SiteMap';
-$_SMAP_CONF['pi_version']       = '1.1.6';
+$_SMAP_CONF['pi_version']       = '1.1.7';
 $_SMAP_CONF['gl_version']       = '1.1.5';
 $_SMAP_CONF['pi_url']           = 'http://www.glfusion.org/';
 ?>
