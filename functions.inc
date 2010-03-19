@@ -68,7 +68,11 @@ require_once $_CONF['path'].'plugins/sitemap/sitemap.php';
 */
 
 function plugin_getmenuitems_sitemap() {
-	global $_CONF;
+	global $_CONF, $_SMAP_CONF;
+
+    if ( COM_isAnonUser() && ( $_SMAP_CONF['anon_access'] === false || $_CONF['loginrequired'] == 1) ) {
+        return;
+    }
 
     $menuitems = array();
 	$menuitems[SITEMAP_str('menu_label')] = $_CONF['site_url'] . '/sitemap/index.php';
@@ -240,8 +244,8 @@ function SITEMAP_saveConfig() {
 			$value = '[' . $value . ']';
 		}
 
-		$name  = addslashes($name);
-		$value = addslashes($value);
+		$name  = DB_escapeString($name);
+		$value = DB_escapeString($value);
 
 		$sql = "UPDATE {$_TABLES['smap_config']} "
 			 . "SET value = '{$value}' "

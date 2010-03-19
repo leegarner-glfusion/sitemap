@@ -59,8 +59,8 @@ $VALUES_100_TO_101 = array();
 // Builds SQL's into $DEFVALUES[]
 foreach ($DATA_100_TO_101 as $data) {
 	list($name, $value) = $data;
-	$name  = addslashes($name);
-	$value = addslashes($value);
+	$name  = DB_escapeString($name);
+	$value = DB_escapeString($value);
 	$VALUES_100_TO_101['smap_config'][] = "INSERT INTO {$_TABLES['smap_config']} "
 		. "VALUES ('" . $name . "', '" . $value . "')";
 }

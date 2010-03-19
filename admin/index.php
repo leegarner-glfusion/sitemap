@@ -31,6 +31,7 @@
 // +--------------------------------------------------------------------------+
 
 require_once '../../../lib-common.php';
+require_once '../../auth.inc.php';
 
 if (!in_array('sitemap', $_PLUGINS)) {
     COM_404();

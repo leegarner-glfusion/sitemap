@@ -8,7 +8,7 @@
 // +--------------------------------------------------------------------------+
 // | $Id::                                                                   $|
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2008-2009 by the following authors:                        |
+// | Copyright (C) 2008-2010 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
 // |                                                                          |
@@ -44,19 +44,20 @@ if (!in_array('sitemap', $_PLUGINS)) {
 // Loads config
 SITEMAP_loadConfig();
 
+if ( COM_isAnonUser() && ( $_SMAP_CONF['anon_access'] === false || $_CONF['loginrequired'] == 1) ) {
+    $display = COM_siteHeader();
+    $display .= SEC_loginRequiredForm();
+    $display .= COM_siteFooter();
+    echo $display;
+    exit;
+}
+
 // Checks if user has right to access this page
 $uid = 1;
 if (isset($_USER['uid'])) {
 	$uid = $_USER['uid'];
 } else {
 	$_USER['uid']   = 1;
-	$_USER['theme'] = $_CONF['theme'];
-}
-
-if ($_SMAP_CONF['anon_access'] === false AND $uid == 1) {
-    // Anonymous user is not allwed to access this page
-	echo COM_refresh($_CONF['site_url'] . '/index.php');
-	exit;
 }
 
 //===========================
@@ -273,7 +274,7 @@ $T->set_file('t_item_list','item_list.thtml');
 // Collects data sources
 
 // $dataproxy is a global object in this script and functions.inc
-$dataproxy =& new Dataproxy($uid);
+$dataproxy = new Dataproxy($uid);
 
 $disp_orders = array();
 foreach ($dataproxy->getAllDriverNames() as $driver) {

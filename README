@@ -1,5 +1,5 @@
 SiteMap Plugin for glFusion
-Version: 1.1.4
+Version: 1.1.7
 
 For the latest documentation, please see
 
@@ -28,7 +28,7 @@ SiteMap has the following system requirements:
     * DataProxy Plugin v1.1.4
     * PHP 4.3.3 and higher. Because of some security issues PHP 4.3.10 or
       higher is strictly recommended. (PHP5 should be fine.)
-    * glFusion v1.1.2 or newer
+    * glFusion v1.1.9 or newer
 
 INSTALLATION
 
@@ -40,6 +40,4 @@ UPGRADING
 
 The upgrade process is identical to the installation process, simply upload
 the distribution from the Plugin Administration page.
-
-CONFIGURATION
 
