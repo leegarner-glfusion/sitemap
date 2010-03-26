@@ -379,7 +379,7 @@ function SITEMAP_createGoogleSitemap() {
 	$retval = false;
 
 	// Loads config
-	SITEMAP_loadConfig();
+//	SITEMAP_loadConfig();
 
 	// Header
 	$sitemap = '<?xml version="1.0" encoding="UTF-8"?>' . LB
@@ -453,4 +453,6 @@ function SITEMAP_createGoogleSitemap() {
 function plugin_runScheduledTask_sitemap() {
 	SITEMAP_createGoogleSitemap();
 }
+
+SITEMAP_loadConfig();
 ?>
