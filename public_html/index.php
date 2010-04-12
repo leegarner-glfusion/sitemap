@@ -154,8 +154,9 @@ function SITEMAP_buildItems(&$driver, $pid) {
 					continue;
 				}
 			}
-			$link = '<a href="' . $item['uri'] . '">'
-				  . $driver->escape($item['title']) . '</a>';
+			$link = COM_createLink($driver->escape($item['title']),
+			        $item['uri'],
+			        array('title'=> $driver->escape($item['title'])) );
 			$T->set_var('item', $link);
 			if ($item['date'] !== false) {
 				$date = date($_SMAP_CONF['date_format'], $item['date']);
