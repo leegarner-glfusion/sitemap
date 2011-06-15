@@ -208,7 +208,7 @@ function SITEMAP_loadConfig() {
 		exit;
 	}
 
-	while (($A = DB_fetchArray($result)) !== false) {
+	while (($A = DB_fetchArray($result)) !== FALSE) {
 		list($name, $value) = $A;
 		if ($value == 'true') {
 			$value = true;
