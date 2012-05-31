@@ -8,7 +8,7 @@
 // +--------------------------------------------------------------------------+
 // | $Id::                                                                   $|
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2009 by the following authors:                             |
+// | Copyright (C) 2009-2012 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
 // +--------------------------------------------------------------------------+
@@ -46,7 +46,7 @@ $INSTALL_plugin['sitemap'] = array(
     'installer' => array('type' => 'installer', 'version' => '1', 'mode' => 'install'),
     'plugin' => array('type' => 'plugin', 'name' => $_SMAP_CONF['pi_name'], 'ver' => $_SMAP_CONF['pi_version'], 'gl_ver' => $_SMAP_CONF['gl_version'], 'url' => $_SMAP_CONF['pi_url'], 'display' => $_SMAP_CONF['pi_name']),
     array('type' => 'table', 'table' => $_TABLES['smap_config'], 'sql' => $_SQL['smap_config']),
-    array('type' => 'group', 'group' => 'sitemap Admin', 'desc' => 'Moderators of the SiteMap Plugin', 'variable' => 'admin_group_id', 'addroot' => true),
+    array('type' => 'group', 'group' => 'sitemap Admin', 'desc' => 'Moderators of the SiteMap Plugin', 'variable' => 'admin_group_id', 'addroot' => true, 'admin' => true),
     array('type' => 'feature', 'feature' => 'sitemap.admin', 'desc' => 'Administer the SiteMap Plugin', 'variable' => 'admin_feature_id'),
     array('type' => 'mapping', 'group' => 'admin_group_id', 'feature' => 'admin_feature_id', 'log' => 'Adding SiteMap feature to the SiteMap admin group'),
     array('type' => 'sql', 'sql' => $DEFAULT_DATA['smap_conf']),

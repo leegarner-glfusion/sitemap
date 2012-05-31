@@ -180,6 +180,8 @@ function plugin_upgrade_sitemap() {
 			}
         case '1.1.4' :
         case '1.1.5' :
+        case '1.1.6' :
+            DB_query("UPDATE {$_TABLES['groups']} SET grp_gl_core=2 WHERE grp_name='sitemap Admin'",1);
             break;
 		default:
 			COM_errorLog('Sitemap: upgrade procedure for version ' . $pi_version . ' is not implemented in plugin_upgrade_sitemap().');
@@ -378,15 +380,12 @@ function SITEMAP_createGoogleSitemap() {
 
 	$retval = false;
 
-	// Loads config
-//	SITEMAP_loadConfig();
-
 	// Header
 	$sitemap = '<?xml version="1.0" encoding="UTF-8"?>' . LB
 			 . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . LB;
 
 	// Collects items
-	$dataproxy =& new Dataproxy(1);
+	$dataproxy = new Dataproxy(1);
 	$drivers   = $dataproxy->getAllDriverNames();
 
 	foreach ($drivers as $driver) {
