@@ -235,7 +235,7 @@ $menu_arr = array (
 
 $header .= COM_startBlock($LANG_SMAP['admin'], '',
                           COM_getBlockTemplate('_admin_block', 'header'));
-$header .= ADMIN_createMenu($menu_arr, $LANG_SMAP['admin'], $_CONF['site_url'] . '/sitemap/images/sitemap.gif');
+$header .= ADMIN_createMenu($menu_arr, $LANG_SMAP['admin'], $_CONF['site_url'] . '/sitemap/images/sitemap.png');
 $header .= COM_endBlock(COM_getBlockTemplate('_admin_block', 'footer'));
 
 // Displays
@@ -245,7 +245,7 @@ $T = new Template($_CONF['path'] . 'plugins/sitemap/templates');
 $T->set_file('admin', 'admin.thtml');
 $T->set_var('xhtml', XHTML);
 $T->set_var('this_script', $_CONF['site_admin_url'] . '/plugins/sitemap/index.php');
-$T->set_var('icon_url', $_CONF['site_url'] . '/sitemap/images/sitemap.gif');
+$T->set_var('icon_url', $_CONF['site_url'] . '/sitemap/images/sitemap.png');
 $T->set_var('lang_admin', SITEMAP_str('admin'));
 $T->set_var('lang_sitemap_items', SITEMAP_str('sitemap_items'));
 $T->set_var('lang_order', SITEMAP_str('order'));
