@@ -6,9 +6,11 @@
 // |                                                                          |
 // | glFusion Plugin API functions and support functions                      |
 // +--------------------------------------------------------------------------+
-// | $Id::                                                                   $|
-// +--------------------------------------------------------------------------+
-// | Based on the Data Proxy Plugin for Geeklog CMS                           |
+// | Copyright (C) 2009-2015 by the following authors:                        |
+// |                                                                          |
+// | Mark R. Evans          mark AT glfusion DOT org                          |
+// |                                                                          |
+// | Based on the Site Map Plugin                                             |
 // | Copyright (C) 2007-2008 by the following authors:                        |
 // |                                                                          |
 // | Authors: mystral-kk        - geeklog AT mystral-kk DOT net               |
@@ -182,7 +184,9 @@ function plugin_upgrade_sitemap() {
         case '1.1.5' :
         case '1.1.6' :
             DB_query("UPDATE {$_TABLES['groups']} SET grp_gl_core=2 WHERE grp_name='sitemap Admin'",1);
-            break;
+
+        case '1.1.7' :
+
 		default:
 			COM_errorLog('Sitemap: upgrade procedure for version ' . $pi_version . ' is not implemented in plugin_upgrade_sitemap().');
 			break;

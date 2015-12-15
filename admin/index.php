@@ -6,9 +6,11 @@
 // |                                                                          |
 // | Administrative Interface                                                 |
 // +--------------------------------------------------------------------------+
-// | $Id::                                                                   $|
-// +--------------------------------------------------------------------------+
-// | Based on the Data Proxy Plugin for Geeklog CMS                           |
+// | Copyright (C) 2014-2015 by the following authors:                        |
+// |                                                                          |
+// | Mark R. Evans          mark AT glfusion DOT org                          |
+// |                                                                          |
+// | Based on the Data Proxy Plugin                                           |
 // | Copyright (C) 2007-2008 by the following authors:                        |
 // |                                                                          |
 // | Authors: mystral-kk        - geeklog AT mystral-kk DOT net               |
@@ -41,7 +43,7 @@ if (!in_array('sitemap', $_PLUGINS)) {
 // Only let admin users access this page
 if (!SEC_hasRights('sitemap.admin')) {
     // Someone is trying to illegally access this page
-    COM_errorLog("Someone has tried to illegally access the sitemap Admin page.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: {$_SERVER['REMOTE_ADDR']}", 1);
+    COM_errorLog("Someone has tried to access the sitemap Admin page without proper permissions.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: {$_SERVER['REMOTE_ADDR']}", 1);
     $display = COM_siteHeader()
 			 . COM_startBlock(SITEMAP_str('access_denied'))
 			 . SITEMAP_str('access_denied_msg')
@@ -71,18 +73,6 @@ function SITEMAP_createCheckBox($var_name) {
 	}
 	$retval .= '><label for="' . $id . '">'
 			. SITEMAP_str($var_name) . '</label>' . LB;
-	return $retval;
-}
-
-/**
-* Creates static pages type dropdown list
-*/
-function SITEMAP_createSPOption($type) {
-	global $_SMAP_CONF, $LANG_SMAP;
-	$selection = ($type == $_SMAP_CONF['sp_type'])
-	 		   ? ' selected="selected"' : '';
-	$retval = '<option value="' . $type . '"' . $selection . '>'
-			. SITEMAP_str('sp_type' . (string) $type) . '</option>' . LB;
 	return $retval;
 }
 
@@ -177,7 +167,7 @@ if (isset($_GET['op']) AND isset($_GET['driver'])) {
 
 // Saves vars
 if (isset($_POST['submit']) AND ($_POST['submit'] == $LANG_SMAP['submit'])) {
-	if (!is_array($_POST['drivers'])) {
+	if (isset($_POST['drivers']) && !is_array($_POST['drivers'])) {
 		$_POST['drivers'] = (array) $_POST['drivers'];
 	}
 
@@ -203,19 +193,11 @@ if (isset($_POST['submit']) AND ($_POST['submit'] == $LANG_SMAP['submit'])) {
 	}
 
 	$_SMAP_CONF['anon_access']         = isset($_POST['anon_access']);
-//	$_SMAP_CONF['sitemap_in_xhtml']    = isset($_POST['sitemap_in_xhtml']);
 	$_SMAP_CONF['date_format']         = $_POST['date_format'];
 	$_SMAP_CONF['google_sitemap_name'] = $_POST['google_sitemap_name'];
 	$timezone = preg_replace("/[^0-9.:+-]/", '', $_POST['time_zone']);
 	$_SMAP_CONF['time_zone'] = $timezone;
 
-	// Since version 1.1.4
-	$sp_type = intval($_POST['sp_type']);
-	if (($sp_type < 0) OR ($sp_type > 2)) {
-		$sp_type = 2;
-	}
-	$_SMAP_CONF['sp_type']   = $sp_type;
-	$_SMAP_CONF['sp_except'] = preg_replace("/\s{2,}/", ' ', $_POST['sp_except']);
 	// Saves config data and re-create the sitemap if necessary
 	SITEMAP_saveConfig();
 
@@ -224,7 +206,7 @@ if (isset($_POST['submit']) AND ($_POST['submit'] == $LANG_SMAP['submit'])) {
 	}
 }
 
-require_once( $_CONF['path_system'] . 'lib-admin.php' );
+USES_lib_admin(); // require_once( $_CONF['path_system'] . 'lib-admin.php' );
 
 $header = '';
 
@@ -243,7 +225,6 @@ $display = COM_siteHeader();
 $display .= $header;
 $T = new Template($_CONF['path'] . 'plugins/sitemap/templates');
 $T->set_file('admin', 'admin.thtml');
-$T->set_var('xhtml', XHTML);
 $T->set_var('this_script', $_CONF['site_admin_url'] . '/plugins/sitemap/index.php');
 $T->set_var('icon_url', $_CONF['site_url'] . '/sitemap/images/sitemap.png');
 $T->set_var('lang_admin', SITEMAP_str('admin'));
@@ -269,16 +250,6 @@ $T->set_var('lang_update_now', SITEMAP_str('update_now'));
 $T->set_var('lang_last_updated', SITEMAP_str('last_updated'));
 $T->set_var('lang_submit', SITEMAP_str('submit'));
 
-// Since version 1.1.4
-$T->set_var('lang_common_setting', SITEMAP_str('common_setting'));
-$T->set_var('lang_sp_setting', SITEMAP_str('sp_setting'));
-$T->set_var('lang_sp_type', SITEMAP_str('sp_type'));
-$sp_options = SITEMAP_createSPOption(0)
-			. SITEMAP_createSPOption(1)
-			. SITEMAP_createSPOption(2);
-$T->set_var('sp_options', $sp_options);
-$T->set_var('lang_sp_except', SITEMAP_str('sp_except'));
-$T->set_var('sp_except', $_SMAP_CONF['sp_except']);
 // Sets config vars for sitemap
 $disp_orders = array();
 
@@ -307,7 +278,7 @@ foreach ($disp_orders as $supported_driver) {
 	if ($_SMAP_CONF['sitemap_' . $supported_driver] === true) {
 		$drivers .= ' checked="checked"';
 	}
-	$drivers .= XHTML . '><label for="' . $id . '">'
+	$drivers .= '><label for="' . $id . '">'
 			 .  SITEMAP_str($supported_driver)
 			 . '</label></th><td>' . $link . '</td></tr>' . LB;
 }
@@ -342,8 +313,7 @@ foreach ($dataproxy->getAllSupportedDriverNames() as $supported_driver) {
 
 $T->set_var('gsmap_drivers', $gsmap_drivers);
 
-$sitemap_fields = SITEMAP_createCheckBox('anon_access')      . '<br' . XHTML . '>' . LB;
-//$sitemap_fields .= SITEMAP_createCheckBox('sitemap_in_xhtml') . '<br' . XHTML . '>' . LB;
+$sitemap_fields = SITEMAP_createCheckBox('anon_access')      . '<br>' . LB;
 $T->set_var('sitemap_fields', $sitemap_fields);
 $T->set_var('time_zone', $_SMAP_CONF['time_zone']);
 $T->set_var('date_format', $_SMAP_CONF['date_format']);

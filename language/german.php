@@ -7,9 +7,11 @@
 // | German Language File (UTF-8 Version)                                     |
 // | Modifiziert: August 09 Tony Kluever									  |
 // +--------------------------------------------------------------------------+
-// | $Id::                                                                   $|
-// +--------------------------------------------------------------------------+
-// | Based on the Data Proxy Plugin for Geeklog CMS                           |
+// | Copyright (C) 2009-2015 by the following authors:                        |
+// |                                                                          |
+// | Mark R. Evans          mark AT glfusion DOT org                          |
+// |                                                                          |
+// | Based on the Site Map Plugin                                             |
 // | Copyright (C) 2007-2008 by the following authors:                        |
 // |                                                                          |
 // | Authors: mystral-kk        - geeklog AT mystral-kk DOT net               |
@@ -100,14 +102,7 @@ $LANG_SMAP = array (
 	'priority'          => 'Priorität',
 	'desc_freq'         => '<strong>Häufigkeit</strong> teilt den Google-Webcrawlern mit, wir oft das Objekt vorraussichtlich aktualisert wird. Auch wenn Du "niemals" wählst, überprüfen die Google-Crawler irgendwann, ob das Objekt aktualisiert wurde.',
 	'desc_priority'     => 'Bei <strong>Priorität</strong>, gib einen Wert zwischen <strong>0.0</strong> (niedrigster) und <strong>1.0</strong> (höchster) ein. Der Standardwert ist <strong>0.5</strong>.',
-	// Since version 1.1.4
 	'common_setting'    => 'Allgemeine Einstellungen',
-	'sp_setting'        => 'Stat. Seiten',
-	'sp_type'           => 'Art der stat. Seiten, die in der Sitemap aufgelistet werden',
-	'sp_type0'          => 'Alle',
-	'sp_type1'          => 'Nur Seiten, die im Centerblock auftauchen',
-	'sp_type2'          => 'Nur Seiten, die NICHT im Centerblock auftauchen',
-	'sp_except'         => 'IDs der Seiten, die nicht in der Sitemap aufgelistet werden sollen (mittels Leerzeichen getrennt)',
 	'back_to_top'       => 'Zurück nach oben',
 );
 ?>

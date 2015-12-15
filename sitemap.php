@@ -6,9 +6,11 @@
 // |                                                                          |
 // | Plugin Data                                                              |
 // +--------------------------------------------------------------------------+
-// | $Id::                                                                   $|
-// +--------------------------------------------------------------------------+
-// | Based on the Data Proxy Plugin for Geeklog CMS                           |
+// | Copyright (C) 2009-2015 by the following authors:                        |
+// |                                                                          |
+// | Mark R. Evans          mark AT glfusion DOT org                          |
+// |                                                                          |
+// | Based on the Site Map Plugin                                             |
 // | Copyright (C) 2007-2008 by the following authors:                        |
 // |                                                                          |
 // | Authors: mystral-kk        - geeklog AT mystral-kk DOT net               |
@@ -51,7 +53,7 @@ $_SMAP_CONF = array();
 
 $_SMAP_CONF['pi_name']          = 'sitemap';
 $_SMAP_CONF['pi_display_name']  = 'SiteMap';
-$_SMAP_CONF['pi_version']       = '1.1.7';
-$_SMAP_CONF['gl_version']       = '1.2.0';
-$_SMAP_CONF['pi_url']           = 'http://www.glfusion.org/';
+$_SMAP_CONF['pi_version']       = '1.2.0';
+$_SMAP_CONF['gl_version']       = '1.5.2';
+$_SMAP_CONF['pi_url']           = 'https://www.glfusion.org/';
 ?>

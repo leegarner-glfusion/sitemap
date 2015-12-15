@@ -6,13 +6,11 @@
 // |                                                                          |
 // | User Interface                                                           |
 // +--------------------------------------------------------------------------+
-// | $Id::                                                                   $|
-// +--------------------------------------------------------------------------+
-// | Copyright (C) 2008-2010 by the following authors:                        |
+// | Copyright (C) 2008-2015 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
 // |                                                                          |
-// | Based on the Data Proxy Plugin for Geeklog CMS                           |
+// | Based on the Data Proxy Plugin                                           |
 // | Copyright (C) 2007-2008 by the following authors:                        |
 // |                                                                          |
 // | Authors: mystral-kk        - geeklog AT mystral-kk DOT net               |
@@ -186,8 +184,6 @@ function SITEMAP_buildItems(&$driver, $pid) {
 function SITEMAP_buildCategory(&$driver, $cat) {
 	global $T;
 
-
-
 	$num_total_items = 0;
 	$temp = $T->get_var('child_categories');	// Push $T->var('child_categories')
 
@@ -244,17 +240,10 @@ function SITEMAP_buildCategory(&$driver, $cat) {
 //=====================================
 
 // Retrieves vars
-$_GET  = SITEMAP_stripslashes($_GET);
-$_POST = SITEMAP_stripslashes($_POST);
 $selected = 'all';
 if (isset($_POST['type'])) {
 	$selected = COM_applyFilter($_POST['type']);
 }
-
-# // Sets default time zone
-# if (version_compare(PHP_VERSION, '5.1.0') >= 0) {
-# 	date_default_timezone_set('Asia/Tokyo');
-# }
 
 $T = new Template($_CONF['path'] . 'plugins/sitemap/templates');
 
