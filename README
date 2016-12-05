@@ -26,8 +26,8 @@ SYSTEM REQUIREMENTS
 SiteMap has the following system requirements:
 
     * DataProxy Plugin v1.1.4
-    * PHP 5.3.0 and higher.
-    * glFusion v1.5.2 or newer
+    * PHP 5.3.3 and higher.
+    * glFusion v1.6.0 or newer
 
 INSTALLATION
 
