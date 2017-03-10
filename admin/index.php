@@ -266,6 +266,7 @@ foreach ($disp_orders as $supported_driver) {
 //    if ( $supported_driver == '' ) {
 //        continue;
 //    }
+        $driver_name = $dataproxy->drivers[$supported_driver]->getDriverName();
 	$id   = 'sitemap_admin_' . $supported_driver;
 	$link = '<a href="' . THIS_SCRIPT . '?driver=' . $supported_driver
 		  . '&amp;op=up">' . SITEMAP_str('up') . '</a>&nbsp;'
@@ -279,7 +280,7 @@ foreach ($disp_orders as $supported_driver) {
 		$drivers .= ' checked="checked"';
 	}
 	$drivers .= '><label for="' . $id . '">'
-			 .  SITEMAP_str($supported_driver)
+                        . $driver_name
 			 . '</label></th><td>' . $link . '</td></tr>' . LB;
 }
 
@@ -288,7 +289,11 @@ $T->set_var('sitemap_drivers', $drivers);
 // Sets config vars for Google sitemap
 $gsmap_drivers = '';
 
-foreach ($dataproxy->getAllSupportedDriverNames() as $supported_driver) {
+foreach ($dataproxy->drivers as $driver) {
+        $supported_driver = $driver->driver_name;
+        if (!isset($_SMAP_CONF['priority_' . $supported_driver])) {
+            $_SMAP_CONF['priority_' . $supported_driver] = '0.5';
+        }
 	$id = 'gsmap_admin_' . $supported_driver;
 	$gsmap_drivers .= '<tr><th style="text-align: left;"><input id="' . $id
 				   .  '" name="gsmap_drivers[]" type="checkbox" value="'
@@ -297,7 +302,7 @@ foreach ($dataproxy->getAllSupportedDriverNames() as $supported_driver) {
 		$gsmap_drivers .= ' checked="checked"';
 	}
 	$gsmap_drivers .= '><label for="' . $id . '">'
-				   .  SITEMAP_str($supported_driver) . '</label></th>';
+                . $dataproxy->drivers[$supported_driver]->getDriverName() . '</label></th>';
 
 	// Frequency
 	$gsmap_drivers .= '<td>' . SITEMAP_getFreqOptions($supported_driver)
