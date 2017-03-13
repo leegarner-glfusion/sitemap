@@ -1,0 +1,13 @@
+{# begin {templatelocation} #}
+<form method="post" action="{action_url}">
+  <select name="type" onchange="this.form.submit()">
+    <option value="all" {all_sel}>{$LANG_SMAP['all']}</option>
+<!-- BEGIN selectOpts -->
+    <option value="{driver_name}" {selected}>{driver_display_name}</option>
+<!-- END selectOpts -->
+  </select>
+  <noscript>
+    <input name="submit" type="submit" value="{$LANG_SMAP['submit']}" />
+  </noscript>
+</form>
+{# end {templatelocation} #}
