@@ -45,7 +45,7 @@ the sitemap_base class provided by this plugin.
 
 Example:
 ```php
-class Sitemap_paypal extends Sitemap_base
+class sitemap_myplugin extends sitemap_base
 {
 
     /**
@@ -54,7 +54,7 @@ class Sitemap_paypal extends Sitemap_base
     *
     *   @return string      URL to plugin
     */
-    public static function getEntryPoint()
+    public function getEntryPoint()
     {
         return 'http://mysite.com/myplugin/index.php';
     }
@@ -66,7 +66,7 @@ class Sitemap_paypal extends Sitemap_base
     *
     *   @return string      Name of driver (plugin)
     */
-    public static function getName()
+    public function getName()
     {
         return 'myplugin';
     }
@@ -78,7 +78,7 @@ class Sitemap_paypal extends Sitemap_base
     *
     *   @return string      Plugin friendly name
     */
-    public static function getDisplayName()
+    public function getDisplayName()
     {
         return 'My Plugin Name';
     }
@@ -90,7 +90,7 @@ class Sitemap_paypal extends Sitemap_base
     *   @param  mixed   $cat_id     Category ID
     *   @return array       Array of items
     */
-    public static function getItems($cat_id = 0)
+    public function getItems($cat_id = 0)
     {
         return array(
             array(
@@ -118,7 +118,7 @@ class Sitemap_paypal extends Sitemap_base
     *   @param  mixed   $base   Base category
     *   @return array       Array of categories
     */
-    public static function getChildCategories($base = false)
+    public function getChildCategories($base = false)
     {
         return array(
             array(

@@ -19,7 +19,7 @@ class sitemap_article extends sitemap_base
         return $LANG33[55];
     }
 
-    public function getChildCategories($pid = false, $all_langs = false)
+    public function getChildCategories($pid = false)
     {
         global $_CONF, $_TABLES;
 
@@ -52,9 +52,9 @@ class sitemap_article extends sitemap_base
             }
         }
 
-        // Adds lang id.  When uid is 0, then it means access as Root
-        if (($this->uid > 0) AND function_exists('COM_getLangSQL')
-         AND $all_langs === false) {
+        // Adds lang id. When uid is 0, then it means access as Root
+        if ($this->uid > 0 && function_exists('COM_getLangSQL') &&
+                $this->all_langs === false) {
             $where = (strpos($sql, 'WHERE') !== false) ? true : false;
             if ($where === true) {
                 $sql .= COM_getLangSQL('tid', 'AND');
@@ -87,7 +87,6 @@ class sitemap_article extends sitemap_base
     }
 
     /**
-    * @param $all_langs boolean: true = all languages, true = current language
     * Returns array of (
     *   'id'        => $id (string),
     *   'title'     => $title (string),
@@ -97,7 +96,7 @@ class sitemap_article extends sitemap_base
     *   'raw_data'  => raw data of the item (stripslashed)
     * )
     */
-    public function getItemById($id, $all_langs = false)
+    public function getItemById($id)
     {
         global $_CONF, $_TABLES;
 
@@ -110,7 +109,7 @@ class sitemap_article extends sitemap_base
         if ($this->uid > 0) {
             $sql .= COM_getTopicSql('AND', $this->uid);
             $sql .= COM_getPermSql('AND', $this->uid);
-            if (function_exists('COM_getLangSQL') AND ($all_langs === false)) {
+            if (function_exists('COM_getLangSQL') AND ($this->all_langs === false)) {
                 $sql .= COM_getLangSQL('sid', 'AND');
             }
         }
@@ -144,7 +143,7 @@ class sitemap_article extends sitemap_base
     *   'image_uri' => $image_uri (string)
     * )
     */
-    public function getItems($tid = false, $all_langs = false)
+    public function getItems($tid = false)
     {
         global $_CONF, $_TABLES;
 
@@ -159,7 +158,7 @@ class sitemap_article extends sitemap_base
         if ($this->uid > 0) {
             $sql .= COM_getTopicSql('AND', $this->uid)
                  .  COM_getPermSql('AND', $this->uid);
-            if (function_exists('COM_getLangSQL') AND ($all_langs === false)) {
+            if (function_exists('COM_getLangSQL') && ($this->all_langs === false)) {
                 $sql .= COM_getLangSQL('sid', 'AND');
             }
         }

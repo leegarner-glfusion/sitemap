@@ -254,6 +254,9 @@ foreach ($_SMAP_MAPS as $pi_name=>$pi_config) {
 foreach ($_SMAP_DRIVERS as $driver) {
     $num_items = 0;
 
+    // Use selected language if available
+    $driver->setAllLangs(false);
+
     // Only display selected driver, or "all"
     if ($selected != 'all' && $selected != $driver->getName()) {
         continue;

@@ -21,15 +21,37 @@
 class sitemap_base
 {
 
-    public $uid;
+    protected $uid;
+    protected $all_langs;   // true to include all languages
 
+
+    /**
+    *   Constructor. Sets internal values to defaults
+    */
     public function __construct()
     {
+        global $_USER;
         $this->uid = (int)$_USER['uid'];
+        $this->all_langs = false;
     }
+
+
+    /**
+    *   If all_langs is false only items in the user's language are returned.
+    *   If true, all items are returned regardless of the item's language.
+    *
+    *   @param  boolean $status     True to get all languages, False to restrict
+    */
+    public function setAllLangs($status = false)
+    {
+        $this->all_langs = $status === true ? true : false;
+    }
+
 
     /**
     *   Get the name of this sitemap class
+    *
+    *   @return string  Short name for this sitemap type
     */
     public function getName()
     {
@@ -38,13 +60,23 @@ class sitemap_base
 
 
     /**
-    *   Get the display name of this sitemap class
+    *   Get the display name of this sitemap class.
+    *   Normally should return a value from the LANG file
+    *
+    *   @return string  Friendly name of the plugin or content type
     */
     public function getDisplayName()
     {
         return 'Unknown';
     }
 
+
+    /**
+    *   Get the plugin or item's entry point.
+    *   Typically this is {site_url}/pluginname/index.php
+    *
+    *   @return string  Base URL to plugin or content items
+    */
     public function getEntryPoint()
     {
         global $_CONF;
@@ -52,17 +84,53 @@ class sitemap_base
     }
 
 
-    public function getChildCategories($base_cat=false)
+    /**
+    *   Get all the categories under the given base category.
+    *
+    *   @param  mixed   $base   Base category
+    *   @return array(
+    *               array(
+    *                   'id'    => Category 1 ID,
+    *                   'title' => Category title,
+    *                   'uri'   => URL to category display page,
+    *                   'date'  => Last updated date (False if not used),
+    *                   'image_uri' => URL to category image,
+    *               ),
+    *               // ... etc.
+    *           );
+    */
+     public function getChildCategories($base_cat=false)
     {
         return array();
     }
 
-    
+
     /**
-    * Escapes a string for display
+    *   Get all the items for this plugin under the given category ID.
     *
-    * @param  $str string: a string to escape
-    * @return      string: an escaped string
+    *   @param  mixed   $cat_id     Category ID
+    *   @return array(
+    *               array(
+    *                   'id'    => Item 1 ID,
+    *                   'title' => Item title,
+    *                   'uri'   => URL to item
+    *                   'date'  => Last update timestamp,
+    *                   'image_url => URL to item's image,
+    *               ),
+    *               // ... etc.
+    *           );
+    */
+    public function getItems($cat_id = 0)
+    {
+        return array();
+    }
+
+
+    /**
+    *   Escapes a string for display
+    *
+    *   @param  $str string: a string to escape
+    *   @return      string: an escaped string
     */
     public function Escape($str)
     {
