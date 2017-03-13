@@ -5,6 +5,12 @@ For the latest documentation, please see
 
 	http://www.glfusion.org/wiki/doku.php?id=sitemap:start
 
+## License
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
 ## Description
 The SiteMap plugin creates a Google compatible sitemap.xml file of your
 site's content. It also provides an interactive Site Map for your site's
@@ -34,7 +40,8 @@ sitemaps. Each plugin must supply a class file named "plugin_name.class.php"
 in the "sitemap" subdirectory under the plugin's private directory.
 For example: private/plugins/myplugin/sitemap/myplugin.class.php
 
-The class must be named "Sitemap_<plugin_name>" to be used.
+The class must be named "sitemap_<plugin_name>" to be used and should extend
+the sitemap_base class provided by this plugin.
 
 Example:
 ```php
