@@ -143,7 +143,7 @@ $_SMAP_UPG_SQL = array(
       PRIMARY KEY (`pi_name`))",
     "DROP TABLE `{$_TABLES['smap_config']}`",
     "INSERT INTO `{$_TABLES['smap_maps']}`
-      (pi_name) VALUES ('articles')";
+      (pi_name) VALUES ('articles')",
     ),
 );
 

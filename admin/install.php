@@ -33,25 +33,21 @@
 // +--------------------------------------------------------------------------+
 
 require_once '../../../lib-common.php';
-require_once $_CONF['path'].'/plugins/sitemap/autoinstall.php';
-
-USES_lib_install();
 
 if (!SEC_inGroup('Root')) {
     // Someone is trying to illegally access this page
     COM_errorLog("Someone has tried to access the Site Map install/uninstall page without proper permissions.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: $REMOTE_ADDR",1);
-    $display = COM_siteHeader ('menu', $LANG_ACCESS['accessdenied'])
-             . COM_startBlock ($LANG_ACCESS['accessdenied'])
-             . $LANG_ACCESS['plugin_access_denied_msg']
-             . COM_endBlock ()
-             . COM_siteFooter ();
-    echo $display;
+    COM_404();
     exit;
 }
 
 /**
 * Main Function
 */
+
+require_once $_CONF['path'].'/plugins/sitemap/autoinstall.php';
+
+USES_lib_install();
 
 if (SEC_checkToken()) {
     $action = COM_applyFilter($_GET['action']);
