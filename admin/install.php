@@ -41,6 +41,12 @@ if (!SEC_inGroup('Root')) {
     exit;
 }
 
+if (!SEC_checkToken()) {
+    COM_errorLog("Sitemap Installation: Security Token Check failed");
+    COM_404();
+    exit;
+}
+
 /**
 * Main Function
 */
@@ -49,30 +55,30 @@ require_once $_CONF['path'].'/plugins/sitemap/autoinstall.php';
 
 USES_lib_install();
 
-if (SEC_checkToken()) {
-    $action = COM_applyFilter($_GET['action']);
-    if ($action == 'install') {
-        if (plugin_install_sitemap()) {
-    		// Redirects to the plugin editor
-    		echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=44');
-    		exit;
-        } else {
-    		echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=72');
-    		exit;
-        }
-    } else if ($action == 'uninstall') {
-    	if (plugin_uninstall_sitemap('installed')) {
-    		/**
-    		* Redirects to the plugin editor
-    		*/
-    		echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=45');
-    		exit;
-    	} else {
-    		echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=73');
-    		exit;
-    	}
+
+$action = COM_applyFilter($_GET['action']);
+switch ($action) {
+case 'install':
+    if (plugin_install_sitemap()) {
+        // Redirects to the plugin editor
+        echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=44');
+        exit;
+    } else {
+        echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=72');
+        exit;
     }
+case 'uninstall':
+    if (plugin_uninstall_sitemap('installed')) {
+        // Redirects to the plugin editor
+        echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=45');
+        exit;
+    } else {
+        echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=73');
+        exit;
+    }
+default:
+    echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php');
+    break;
 }
 
-echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php');
 ?>

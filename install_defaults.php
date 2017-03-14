@@ -7,7 +7,7 @@
 *   @author     Lee Garner <lee@leegarner.com>
 *   @copyright  Copyright (c) 2017 Lee Garner <lee@leegarner.com>
 *   @package    sitemap
-*   @version    0.0.1
+*   @version    2.0.0
 *   @license    http://opensource.org/licenses/gpl-2.0.php
 *               GNU Public License v2 or later
 *   @filesource
@@ -25,11 +25,10 @@ global $_SMAP_DEFAULT;
 $_SMAP_DEFAULT = array();
 
 /**
- *  Activate banners in the header and footer templates?
- *  1 = Yes, 0 = No
- *  Include {banner_header} or {banner_footer} in the desired template
- */
-$_SMAP_DEFAULT['google_sitemap_name'] = 'sitemap.xml';
+*   Names of sitemap files. By default, sitemap.xml and a moblie version
+*   are created
+*/
+$_SMAP_DEFAULT['google_sitemap_name'] = 'sitemap.xml;mobile.xml';
 
 /**
 *   Can anonymous users view the sitemap?

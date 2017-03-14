@@ -139,4 +139,18 @@ function plugin_postinstall_sitemap()
     smapConfig::cleanConfigs();
 }
 
+
+/**
+*   Loads the configuration records for the Online Config Manager
+*
+*   @return boolean     True = proceed with install, False = an error occured
+*/
+function plugin_load_configuration_sitemap()
+{
+    global $_CONF, $_SMAP_CONF, $_TABLES;
+
+    require_once $_CONF['path'].'plugins/'.$_SMAP_CONF['pi_name'].'/install_defaults.php';
+    return plugin_initconfig_sitemap();
+}
+
 ?>
