@@ -1,5 +1,5 @@
 # SiteMap Plugin for glFusion
-Version: 1.2.0
+Version: 2.0.0
 
 For the latest documentation, please see
 
@@ -41,7 +41,8 @@ in the "sitemap" subdirectory under the plugin's private directory.
 For example: private/plugins/myplugin/sitemap/myplugin.class.php
 
 The class must be named "sitemap_<plugin_name>" to be used and should extend
-the sitemap_base class provided by this plugin.
+the sitemap_base class provided by this plugin. Each supported function
+is provided in the base clase and returns a reasonable default to prevent errors.
 
 Example:
 ```php
@@ -52,7 +53,7 @@ class sitemap_myplugin extends sitemap_base
     *   Get the entry point for the plugin. Typically this is
     *   the index.php under public_html/plugin_name.
     *
-    *   @return string      URL to plugin
+    *   @return string      URL to plugin, default {site_url}/{myplugin}/index.php
     */
     public function getEntryPoint()
     {
@@ -64,7 +65,7 @@ class sitemap_myplugin extends sitemap_base
     *   Get the name of this sitemap driver. This is normally just the
     *   plugin name.
     *
-    *   @return string      Name of driver (plugin)
+    *   @return string      Name of driver (plugin), default is the plugin name
     */
     public function getName()
     {
@@ -75,8 +76,9 @@ class sitemap_myplugin extends sitemap_base
     /**
     *   Get the friendly name for this plugin. This could be taken from a
     *   languange file.
+    *   This function should be overridden.
     *
-    *   @return string      Plugin friendly name
+    *   @return string      Plugin friendly name, default is the plugin name
     */
     public function getDisplayName()
     {
@@ -86,9 +88,10 @@ class sitemap_myplugin extends sitemap_base
 
     /**
     *   Get all the items for this plugin under the given category ID.
+    *   This function should be overridden.
     *
     *   @param  mixed   $cat_id     Category ID
-    *   @return array       Array of items
+    *   @return array       Array of items, default is an empty array
     */
     public function getItems($cat_id = 0)
     {
@@ -114,6 +117,7 @@ class sitemap_myplugin extends sitemap_base
 
     /**
     *   Get all the categories under the given base category.
+    *   Default: empty array
     *
     *   @param  mixed   $base   Base category
     *   @return array       Array of categories
