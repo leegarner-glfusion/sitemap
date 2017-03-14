@@ -124,4 +124,19 @@ function plugin_autouninstall_sitemap()
     return $out;
 }
 
+
+/**
+*   Perform post-installation functions specific to this plugin
+*/
+function plugin_postinstall_sitemap()
+{
+    require_once dirname(__FILE__) . '/classes/smapConfig.class.php';
+
+    // Add the local sitemaps (articles, trackbacks, etc.)
+    smapConfig::Add(smapConfig::$local);
+    // Scans all the installed plugins and installs them if drivers
+    // are available
+    smapConfig::cleanConfigs();
+}
+
 ?>
