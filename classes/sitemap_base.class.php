@@ -20,21 +20,23 @@
 */
 class sitemap_base
 {
-
     protected $uid;
     protected $all_langs;   // true to include all languages
     protected $smap_type;   // HTML or XML
-
+    protected $name;        // Name of this plugin or sitemap type
+    protected $config;      // Config elements for this driver
 
     /**
     *   Constructor. Sets internal values to defaults
     */
-    public function __construct()
+    public function __construct($name, $config)
     {
         global $_USER;
         $this->uid = (int)$_USER['uid'];
         $this->all_langs = false;
         $this->setHTML();   // Default to HTML sitemap
+        $this->name = $name;
+        $this->config = $config;
     }
 
 
@@ -81,19 +83,19 @@ class sitemap_base
     */
     public function getName()
     {
-        return 'Unknown';
+        return $this->name;
     }
 
 
     /**
     *   Get the display name of this sitemap class.
-    *   Normally should return a value from the LANG file
+    *   Normally should return a value from the LANG file.
     *
     *   @return string  Friendly name of the plugin or content type
     */
     public function getDisplayName()
     {
-        return 'Unknown';
+        return $this->name;
     }
 
 
@@ -105,7 +107,8 @@ class sitemap_base
     */
     public function getEntryPoint()
     {
-        return false;
+        global $_CONF;
+        return $_CONF['site_url'] . '/' . $this->name . '/index.php';
     }
 
 

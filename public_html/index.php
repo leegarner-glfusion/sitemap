@@ -242,11 +242,11 @@ $_SMAP_DRIVERS = array();
 foreach ($_SMAP_MAPS as $pi_name=>$pi_config) {
     if ($pi_config['smap_enabled'] == 0) continue;
     $classfile = smapConfig::getClassPath($pi_name);
-    if (is_file($classfile)) {
+    if ($classfile) {
         include_once $classfile;
         $cls = 'sitemap_' . $pi_name;
         if (class_exists($cls)) {
-            $_SMAP_DRIVERS[] = new $cls();
+            $_SMAP_DRIVERS[] = new $cls($pi_name, $pi_config);
         }
     }
 }
@@ -283,14 +283,13 @@ foreach ($_SMAP_DRIVERS as $driver) {
             $num_items += $num_cat;
         }
 
-        $T->set_var('categories', $cats);
         $T->parse('category_list', 't_category_list');
     }
+    if ($num_items == 0) continue;
     $T->set_var('num_items', $num_items);
     $T->parse('data_sources', 't_data_source', true);
 }
 
-$T->set_var('lang_sitemap', SITEMAP_str('sitemap'));
 $T->set_var('selector', SITEMAP_getSelectForm($selected));
 $T->parse('output', 't_index');
 $page = $T->finish($T->get_var('output'));

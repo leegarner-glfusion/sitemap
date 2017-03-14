@@ -429,9 +429,9 @@ function SITEMAP_createGoogleSitemap()
         $classfile = smapConfig::getClassPath($pi_name);
         if (is_file($classfile)) {
             include_once $classfile;
-            $cls = 'Sitemap_' . $pi_name;
+            $cls = 'sitemap_' . $pi_name;
             if (class_exists($cls)) {
-                $C = new $cls();
+                $C = new $cls($pi_name, $config);
                 $C->setXML();   // Mark as an XML sitemap
                 $items = $C->getItems();
             }
