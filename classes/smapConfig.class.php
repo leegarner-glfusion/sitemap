@@ -5,14 +5,14 @@
 *   @author     Lee Garner <lee@leegarner.com>
 *   @copyright  Copyright (c) 2017 Lee Garner <lee@leegarner.com>
 *   @package    sitemap
-*   @version    0.2.1
+*   @version    2.0.0
 *   @license    http://opensource.org/licenses/gpl-2.0.php
 *               GNU Public License v2 or later
 *   @filesource
 */
 
 /**
-*   Class for sitemap items
+*   Class for sitemap configurations.
 */
 class smapConfig
 {
@@ -149,7 +149,7 @@ class smapConfig
             $this->SetVars($A);
 
         if ($this->isNew) {
-            $sql1 = "INSERT INTO {$_TABLES['smap_maps']} SET 
+            $sql1 = "INSERT INTO {$_TABLES['smap_maps']} SET
                 pi_name = '" . DB_escapeString($this->pi_name). "', ";
             $sql3 = '';
         } else {
@@ -245,10 +245,13 @@ class smapConfig
         return true;
     }
 
-   
+
     /**
     *   Move a sitemap item up or down in the list.
+    *   The order field is incremented by 10, so this adds or subtracts 11
+    *   to change the order, then reorders the fields.
     *
+    *   @uses   smapConfig::reOrder()
     *   @param  integer $pi_name    Item to move
     *   @param  string  $where      Direction to move ('up' or 'down')
     */
@@ -311,6 +314,7 @@ class smapConfig
                     WHERE pi_name = '" . DB_escapeString($A['pi_name']) . "'";
                 DB_query($sql, 1);
                 if (DB_error()) {
+                    COM_errorLog("smapConfig::reOrder() SQL error: $sql");
                     return false;
                 }
                 // Update the in-memory config array
@@ -333,10 +337,10 @@ class smapConfig
         $_SMAP_MAPS = array();
         $sql = "SELECT * FROM {$_TABLES['smap_maps']}
                 ORDER BY orderby ASC";
-        $result = DB_query($sql);
+        $result = DB_query($sql, 1);
         if (DB_error()) {
-            COM_errorLog('SITEMAP_loadConfig: cannot load config.');
-            exit;
+            COM_errorLog("smapConfig::loadConfigs() SQL error: $sql");
+            return;
         }
 
         while (($A = DB_fetchArray($result, false)) !== FALSE) {
@@ -346,7 +350,8 @@ class smapConfig
 
 
     /**
-    *   Update the priority of a sitemap element
+    *   Update the priority of a sitemap element.
+    *   The valid priorities are defined in sitemap.php.
     *
     *   @param  string  $newvalue   New priority to set
     *   @return float       New value, or old value on error
@@ -355,7 +360,8 @@ class smapConfig
     {
         global $_SMAP_CONF, $_TABLES, $_SMAP_MAPS;
 
-        $oldvalue = $this->priority;
+        // Ensure that the new value is a valid priority. If not,
+        // return the original value.
         $good = false;
         foreach ($_SMAP_CONF['priorities'] as $prio) {
             if ($newvalue == $prio) {
@@ -368,14 +374,15 @@ class smapConfig
         DB_change($_TABLES['smap_maps'], 'priority', $newvalue,
             'pi_name', $this->pi_name);
         if (DB_error()) {
-            return $oldvalue;
+            COM_errorLog("smapConfig::updatePriority() SQL error");
         } else {
-            // Update the in-memory config
-            $_SMAP_MAPS[$this->pi_name]['priority'] = (float)$newvalue;
-            return $newvalue;
+            // Change the current object's value and Update the in-memory config
+            $this->priority = $newvalue;
+            $_SMAP_MAPS[$this->pi_name]['priority'] = $this->priority;
         }
+        return $this->priority;
     }
-        
+
 
     /**
     *   Update the frequency for the current config item.
@@ -388,28 +395,20 @@ class smapConfig
     {
         global $LANG_SMAP, $_TABLES, $_SMAP_MAPS;
 
-        // Save the old value to return in case of error
-        $oldfreq = $this->freq;
-
         // Make sure the new value is valid
         if (array_key_exists($newfreq, $LANG_SMAP['freqs'])) {
-            $sql = "UPDATE {$_TABLES['smap_maps']}
-                    SET freq = '" . DB_escapeString($newfreq) . "'
-                    WHERE pi_name = '" . DB_escapeString($this->pi_name) . "'";
-            DB_query($sql, 1);
+            DB_change($_TABLES['smap_maps'], 'freq', $newvalue,
+                'pi_name', $this->pi_name);
             if (DB_error()) {
                 // Log error and return the old value
                 COM_errorLog("smapConfig::updateFreq error: $sql");
-                return $oldfreq;
             } else {
                 // Update the in-memory config and return the new value
-                $_SMAP_MAPS[$pi_name]['freq'] = $newfreq;
-                return $newfreq;
+                $this->freq = $newfreq;
+                $_SMAP_MAPS[$pi_name]['freq'] = $this->freq;
             }
-        } else {
-            // Invalud value sumbmitted, return the existing value
-            return $oldfreq;
         }
+        return $this->freq;
     }
 
 
@@ -428,20 +427,22 @@ class smapConfig
         // Get any plugins that aren't already in the sitemap table and add them
         $add_values = array();
         foreach ($_PLUGINS as $pi_name) {
-            $classfile = self::getClassPath($pi_name);
-            if (!isset($_SMAP_MAPS[$pi_name]) &&
-                    is_file($classfile)) {
-                $values[] = $pi_name;
-           }
+            if (!isset($_SMAP_MAPS[$pi_name])) {
+                $classfile = self::getClassPath($pi_name);
+                if (is_file($classfile)) {
+                    $values[] = $pi_name;
+                }
+            }
         }
         if (!empty($values)) {
             self::Add($values);
         }
+
         // Now clean out entries for removed plugins, if any
         $values = array();
         foreach ($_SMAP_MAPS as $pi_name=>$info) {
             if (in_array($pi_name, self::$local)) continue;
-            $classfile = self::getClassPath($pi_name);
+            $classfile = self::getClassPath($pi_name, false);
             if (!is_file($classfile)) {
                 $values[] = $pi_name;
             }
@@ -452,23 +453,36 @@ class smapConfig
     }
 
 
-    public static function getClassPath($pi_name)
+    /**
+    *   Get the path to a sitemap driver.
+    *   Checks the plugin directory for a class file. If $builtin is true
+    *   then also check for a built-in driver included with this plugin.
+    *
+    *   @param  string  $pi_name    Name of plugin
+    *   @param  boolean $builtin    True to include built-in drivers
+    *   @return string      Path to driver file, or NULL if not found
+    */
+    public static function getClassPath($pi_name, $builtin=true)
     {
         global $_CONF, $_SMAP_CONF;
 
-        if (in_array($pi_name, self::$local)) {
-            $pi_dir = $_SMAP_CONF['pi_name'];
-        } else {
-            $pi_dir = $pi_name;
-        }
+        $dirs = array($pi_name);
+        // If checking the included drivers also, add the sitemap plugin to the
+        // directory list.
+        if ($builtin) $dirs[] = $_SMAP_CONF['pi_name'];
 
-        $path = $_CONF['path'] . '/plugins/' . $pi_dir .
+        foreach ($dirs as $dir) {
+            $path = $_CONF['path'] . '/plugins/' . $dir .
                     '/sitemap/' . $pi_name . '.class.php';
-        return $path;
+            if (is_file($path)) return $path;
+        }
+        return NULL;
     }
 
 }
 
-smapConfig::$local = array('article');
+// Set the static variable to the names of non-plugin sitemap drivers
+// included with the Sitemap plugin.
+smapConfig::$local = array('article', 'trackback');
 
 ?>
