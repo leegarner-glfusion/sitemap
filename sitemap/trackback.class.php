@@ -74,6 +74,7 @@ class sitemap_trackback extends sitemap_base
             // Only include items that are enabled in the config table.
             if (!array_key_exists($type, $_SMAP_MAPS) &&
                 $_SMAP_MAPS[$type][$this->smap_type.'_enabled'] == 1) {
+echo "here";die;
                 $entries[] = array(
                     'id'        => $A['type'],
                     'pid'       => false,
@@ -146,23 +147,21 @@ class sitemap_trackback extends sitemap_base
              . "FROM {$_TABLES['trackback']} "
              . "WHERE (type = '" . DB_escapeString($category) . "') "
              . "ORDER BY day DESC";
-        $result = DB_query($sql);
+        $result = DB_query($sql, 1);
         if (DB_error()) {
+            COM_errorLog("sitemap_trackback::getItems error: $sql");
             return $entries;
         }
 
-        while (($A = DB_fetchArray($result, false)) !== FALSE) {
-            $entry = array();
-
-            $entry['id']        = $A['cid'];
-            $entry['title']     = $A['title'];
-            $entry['uri']       = $this->cleanUrl($A['url']);
-            $entry['date']      = $A['day'];
-            $entry['image_uri'] = false;
-
-            $entries[] = $entry;
+        while ($A = DB_fetchArray($result, false)) {
+            $entries[] = array(
+                'id'        => $A['cid'],
+                'title'     => $A['title'],
+                'uri'       => $this->cleanUrl($A['url']),
+                'date'      => $A['day'],
+                'image_uri' => false,
+            );
         }
-
         return $entries;
     }
 
