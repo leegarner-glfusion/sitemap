@@ -47,7 +47,8 @@ $_SQL = array(
       `smap_enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
       `gsmap_enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
       `freq` varchar(10) NOT NULL DEFAULT 'weekly',
-      PRIMARY KEY (`pi_name`))",
+      PRIMARY KEY (`pi_name`),
+      KEY `orderby` (`orderby`))",
 );
 
 
