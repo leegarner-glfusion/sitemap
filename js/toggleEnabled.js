@@ -3,7 +3,7 @@
  */
 var SMAP_xmlHttp;
 
-function SMAP_toggleEnabled(cbox, id, type, fld)
+function SMAP_toggleEnabled(cbox, id, type)
 {
   oldval = cbox.checked ? 0 : 1;
   SMAP_xmlHttp=SMAP_GetXmlHttpObject();
@@ -14,7 +14,6 @@ function SMAP_toggleEnabled(cbox, id, type, fld)
   var url=site_admin_url + "/plugins/sitemap/ajax.php?action=toggleEnabled";
   url=url+"&id="+id;
   url=url+"&type="+type;
-  url=url+"&fld="+fld;
   url=url+"&oldval="+oldval;
   url=url+"&sid="+Math.random();
   SMAP_xmlHttp.onreadystatechange=SMAP_sc_toggleEnabled;
@@ -30,7 +29,7 @@ function SMAP_sc_toggleEnabled()
     jsonObj = JSON.parse(SMAP_xmlHttp.responseText)
 
     // Set the ID of the updated checkbox
-    spanid = "togena_" + jsonObj.id
+    spanid = jsonObj.type + "_ena_" + jsonObj.id;
 
     if (jsonObj.newval == 1) {
         document.getElementById(spanid).checked = true;

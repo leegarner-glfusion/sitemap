@@ -152,24 +152,7 @@ define('THIS_SCRIPT', $_CONF['site_admin_url'] . '/plugins/sitemap/index.php');
 USES_sitemap_class_config();
 
 // Loads Sitemap plugin configuration first of all
-//SITEMAP_loadConfig();
 smapConfig::loadConfigs();
-
-/*// Loads Dataproxy plugin
-if (isset($_USER['uid']) AND ($_USER['uid'] >= 1)) {
-    $uid = $_USER['uid'];
-} else {
-    $uid = 1;
-}
-
-// $dataproxy is a global object in this script and functions.inc
-$dataproxy = new Dataproxy($uid);
-$freqs = array(
-    'always', 'hourly', 'daily', 'weekly',    'monthly', 'yearly', 'never'
-);*/
-// Retrieves vars
-//$_GET  = SITEMAP_stripslashes($_GET);
-//$_POST = SITEMAP_stripslashes($_POST);
 
 $expected = array(
     'move', 'updatenow',
@@ -275,11 +258,6 @@ $T->set_var('lang_update_now', SITEMAP_str('update_now'));
 $T->set_var('lang_last_updated', SITEMAP_str('last_updated'));
 $T->set_var('lang_submit', SITEMAP_str('submit'));
 
-/*$configs = array();
-foreach ($_SMAP_MAPS as $pi) {
-    $configs[$pi['pi_name']] = $pi;
-}*/
-
 switch ($action) {
 case 'move':
     USES_sitemap_class_config();
@@ -290,7 +268,6 @@ case 'updatenow':
     break;
 }
 
-$reload_maps = false;     // Flag to indicate maps need reloading
 // Get any plugins that aren't already in the sitemap table and add them
 smapConfig::cleanConfigs();
 
@@ -316,8 +293,9 @@ function SMAP_adminField($fieldname, $fieldvalue, $A, $icon_arr)
 
     case 'gsmap_enabled':
     case 'smap_enabled':
+        list($fldid, $trash) = explode('_', $fieldname);
         $chk = $fieldvalue == 1 ? 'checked="checked"' : '';
-        $retval = "<input id=\"togena_{$pi_name}\" type=\"checkbox\" name=\"{$fieldname}[{$A['pi_name']}]\" value=\"1\" $chk onclick='SMAP_toggleEnabled(this, \"{$A['pi_name']}\", \"smap\", \"{$fieldname}\");' />" . LB;
+        $retval = "<input id=\"{$fldid}_ena_{$pi_name}\" type=\"checkbox\" name=\"{$fieldname}[{$A['pi_name']}]\" value=\"1\" $chk onclick='SMAP_toggleEnabled(this, \"{$A['pi_name']}\", \"{$fldid}\");' />" . LB;
          break;
 
     case 'orderby':
@@ -406,27 +384,12 @@ function SMAP_adminList()
     return $retval;
 }
 
-// Sets config vars for sitemap
-/*$disp_orders = array();
-
-foreach ($dataproxy->getAllSupportedDriverNames() as $supported_driver) {
-    $order = $_SMAP_CONF['order_' . $supported_driver];
-    $disp_orders[$order] = $supported_driver;
-}*/
-
-//ksort($disp_orders);
-$num_drivers = count($disp_orders);
-$drivers = '';
-
 $display .= SMAP_adminList();
 $display .= COM_siteFooter();
 echo $display;
 exit;
 
 foreach ($configs as $config) {
-//    if ( $supported_driver == '' ) {
-//        continue;
-//    }
     $driver_name = $config['pi_name'];
         //$driver_name = $dataproxy->drivers[$supported_driver]->getDriverName();
     $id   = 'sitemap_admin_' . $supported_driver;
@@ -451,9 +414,6 @@ $T->set_var('sitemap_drivers', $drivers);
 // Sets config vars for Google sitemap
 $gsmap_drivers = '';
 
-//var_dump($configs);die;
-// Get configured drivers
-//foreach ($dataproxy->drivers as $driver) {
 foreach ($configs as $config) {
         $supported_driver = $config['pi_name'];
         /*if (!isset($_SMAP_CONF['priority_' . $supported_driver])) {
