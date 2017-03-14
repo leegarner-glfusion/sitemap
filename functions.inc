@@ -355,6 +355,7 @@ function SITEMAP_write($filename, $sitemap)
 
     $retval = false;
     $filename = trim($filename);
+    if (empty($filename)) return;
 
     /**
     * for Google Mobile Sitemap
@@ -420,12 +421,13 @@ function SITEMAP_createGoogleSitemap()
     $T->set_file('smap', 'smap_google.thtml');
 
     $T->set_block('smap', 'smap_item', 'item');
+    $have_maps = false;     // Track whether any maps are acdtual created.
+
     foreach ($_SMAP_MAPS as $pi_name=>$config) {
-        $items = array();
-        if ($pi_name == 'trackback' || $pi_name == 'comments' ||
-                $config['gsmap_enabled'] == 0) {
-            continue;
-        }
+        // Skip disabled sitemaps
+        if (!$config['gsmap_enabled']) continue;
+
+        // Load the driver for the sitemap, if available
         $classfile = smapConfig::getClassPath($pi_name);
         if (is_file($classfile)) {
             include_once $classfile;
@@ -437,13 +439,9 @@ function SITEMAP_createGoogleSitemap()
             }
         }
 
-        /*
-        $function = 'plugin_sitemap_' . $pi_name;
-        if (function_exists($function)) {
-            $items = $function();
-        }
-        */
+        // No driver found, or no items returned
         if (empty($items)) continue;
+
         foreach ($items as $item) {
             if ($item['date'] !== false) {
                 $date = SITEMAP_convertDate($item['date']);
@@ -458,13 +456,16 @@ function SITEMAP_createGoogleSitemap()
             ) );
             $T->parse('item', 'smap_item', true);
         }
+        $have_maps = true;      // Have at least one map
     }
     $T->parse('output', 'smap');
     $sitemap = $T->finish($T->get_var('output'));
 
-    // Writes the Google Sitemap
-    foreach (explode(';', $_SMAP_CONF['google_sitemap_name']) as $filename) {
-        $retval = ($retval || !SITEMAP_write($filename, $sitemap));
+    // Writes the Google Sitemap, if any drivers actually created a map
+    if ($have_maps) {
+        foreach (explode(';', $_SMAP_CONF['google_sitemap_name']) as $filename) {
+            $retval = ($retval || !SITEMAP_write($filename, $sitemap));
+        }
     }
     return !$retval;
 }
@@ -473,18 +474,19 @@ function SITEMAP_createGoogleSitemap()
 /**
 *  Update the 'enabled' value for a sitemap
 *
-*   @deprecated
-*  @param  integer $newval New value to set (1 or 0)
-*  @param  string  $bid    Optional ad ID.  Current object if blank
+*  @param  integer $oldval  Current value
+*  @param  string  $fld     Field, smap or gsmap
 *  @return integer     New value, or old value if an error occurred
 */
 function SMAP_toggleEnabled($pi_name, $fld, $oldval)
 {
     global $_TABLES;
 
+    // Sanitize and set values
+    $oldval = $oldval == 1 ? 1 : 0;
     $newval = $oldval == 0 ? 1 : 0;
     DB_change($_TABLES['smap_maps'],
-                $fld, $newval,
+                $fld . '_enabled', $newval,
                 'pi_name', DB_escapeString($pi_name));
     return DB_error() ? $oldval : $newval;
 }
