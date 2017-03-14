@@ -23,6 +23,7 @@ class sitemap_base
 
     protected $uid;
     protected $all_langs;   // true to include all languages
+    protected $smap_type;   // HTML or XML
 
 
     /**
@@ -33,6 +34,31 @@ class sitemap_base
         global $_USER;
         $this->uid = (int)$_USER['uid'];
         $this->all_langs = false;
+        $this->setHTML();   // Default to HTML sitemap
+    }
+
+
+    public function setHTML()
+    {
+        $this->smap_type = 'smap';
+    }
+
+
+    public function setXML()
+    {
+        $this->smap_type = 'gsmap';
+    }
+
+
+    public function isHTML()
+    {
+        return $this->smap_type == 'smap' ? true : false;
+    }
+
+
+    public function isXML()
+    {
+        return $this->smap_type == 'gsmap' ? true : false;
     }
 
 
@@ -75,12 +101,11 @@ class sitemap_base
     *   Get the plugin or item's entry point.
     *   Typically this is {site_url}/pluginname/index.php
     *
-    *   @return string  Base URL to plugin or content items
+    *   @return mixed Base URL to content items, or False if n/a
     */
     public function getEntryPoint()
     {
-        global $_CONF;
-        return $_CONF['site_url'];
+        return false;
     }
 
 
