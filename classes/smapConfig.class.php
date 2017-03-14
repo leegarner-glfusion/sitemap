@@ -397,7 +397,7 @@ class smapConfig
 
         // Make sure the new value is valid
         if (array_key_exists($newfreq, $LANG_SMAP['freqs'])) {
-            DB_change($_TABLES['smap_maps'], 'freq', $newvalue,
+            DB_change($_TABLES['smap_maps'], 'freq', $newfreq,
                 'pi_name', $this->pi_name);
             if (DB_error()) {
                 // Log error and return the old value
@@ -428,6 +428,7 @@ class smapConfig
         $add_values = array();
         foreach ($_PLUGINS as $pi_name) {
             if (!isset($_SMAP_MAPS[$pi_name])) {
+                // Plugin not in config table, see if there's a driver for it
                 $classfile = self::getClassPath($pi_name);
                 if (is_file($classfile)) {
                     $values[] = $pi_name;
@@ -438,12 +439,13 @@ class smapConfig
             self::Add($values);
         }
 
-        // Now clean out entries for removed plugins, if any
+        // Now clean out entries for removed plugins, if any.
+        // Ignore local drivers and just remove configs for plugins
+        // that are not in the $_PLUGINS array.
         $values = array();
         foreach ($_SMAP_MAPS as $pi_name=>$info) {
             if (in_array($pi_name, self::$local)) continue;
-            $classfile = self::getClassPath($pi_name, false);
-            if (!is_file($classfile)) {
+            if (!in_array($pi_name, $_PLUGINS)) {
                 $values[] = $pi_name;
             }
         }
