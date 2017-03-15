@@ -86,53 +86,6 @@ class sitemap_article extends sitemap_base
         return $retval;
     }
 
-    /**
-    * Returns array of (
-    *   'id'        => $id (string),
-    *   'title'     => $title (string),
-    *   'uri'       => $uri (string),
-    *   'date'      => $date (int: Unix timestamp),
-    *   'image_uri' => $image_uri (string),
-    *   'raw_data'  => raw data of the item (stripslashed)
-    * )
-    */
-    public function getItemById($id)
-    {
-        global $_CONF, $_TABLES;
-
-        $retval = array();
-
-        $sql = "SELECT * "
-             . "FROM {$_TABLES['stories']} "
-             . "WHERE (sid ='" . DB_escapeString($id) . "') "
-             . "AND (draft_flag = 0) AND (date <= NOW()) ";
-        if ($this->uid > 0) {
-            $sql .= COM_getTopicSql('AND', $this->uid);
-            $sql .= COM_getPermSql('AND', $this->uid);
-            if (function_exists('COM_getLangSQL') AND ($this->all_langs === false)) {
-                $sql .= COM_getLangSQL('sid', 'AND');
-            }
-        }
-        $result = DB_query($sql);
-        if (DB_error()) {
-            return $retval;
-        }
-
-        if (DB_numRows($result) == 1) {
-            $A = DB_fetchArray($result, false);
-
-            $retval['id']        = $id;
-            $retval['title']     = $A['title'];
-            $retval['uri']       = COM_buildUrl(
-                $_CONF['site_url'] . '/article.php?story=' . $id
-            );
-            $retval['date']      = strtotime($A['date']);
-            $retval['image_uri'] = false;
-            $retval['raw_data']  = $A;
-        }
-
-        return $retval;
-    }
 
     /**
     * Returns an array of (
