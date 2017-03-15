@@ -185,6 +185,14 @@ function SITEMAP_buildCategory(&$driver, $cat)
         );
     }
 
+    // Builds {category}
+    if ($cat['uri'] !== false) {
+        $category_link = '<a href="' . $cat['uri'] . '">'
+              . $driver->escape($cat['title']) . '</a>';
+    } else {
+        $category_link = $driver->escape($cat['title']);
+    }
+
     // Builds {items}
     list($num_items, $items) = SITEMAP_buildItems($driver, $cat['id']);
     $num_total_items += $num_items;
@@ -196,13 +204,6 @@ function SITEMAP_buildCategory(&$driver, $cat)
         );
     }
 
-    // Builds {category}
-    if ($cat['uri'] !== false) {
-        $category_link = '<a href="' . $cat['uri'] . '">'
-              . $driver->escape($cat['title']) . '</a>';
-    } else {
-        $category_link = $driver->escape($cat['title']);
-    }
 
     $T->set_var('category', $category_link);
     $T->parse('category', 't_category');
@@ -254,9 +255,6 @@ foreach ($_SMAP_MAPS as $pi_name=>$pi_config) {
 foreach ($_SMAP_DRIVERS as $driver) {
     $num_items = 0;
 
-    // Use selected language if available
-    $driver->setAllLangs(false);
-
     // Only display selected driver, or "all"
     if ($selected != 'all' && $selected != $driver->getName()) {
         continue;
@@ -283,6 +281,7 @@ foreach ($_SMAP_DRIVERS as $driver) {
             $num_items += $num_cat;
         }
 
+        $T->set_var('categories', $cats);
         $T->parse('category_list', 't_category_list');
     }
     if ($num_items == 0) continue;
