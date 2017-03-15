@@ -35,14 +35,19 @@ The upgrade process is identical to the installation process, simply upload
 the distribution from the Plugin Administration page.
 
 ## Plugin Integration
-The Sitemap plugin can add data from other plugins to the online and XML
-sitemaps. Each plugin must supply a class file named "plugin_name.class.php"
-in the "sitemap" subdirectory under the plugin's private directory.
-For example: private/plugins/myplugin/sitemap/myplugin.class.php
+A collection of sitemap drivers for the bundled plugins is included in the
+Sitemap Plugin distribution. 
 
-The class must be named "sitemap_<plugin_name>" to be used and should extend
+A plugin may provide it's own driver to be used instead of the default driver
+by including a class file named "plugin_name.class.php"
+in the "sitemap" subdirectory under the plugin's private directory. Example:
+
+    private/plugins/myplugin/sitemap/myplugin.class.php
+
+The class must be named "sitemap_<plugin_name>" and should extend
 the sitemap_base class provided by this plugin. Each supported function
 is provided in the base clase and returns a reasonable default to prevent errors.
+
 
 Example:
 ```php
@@ -118,6 +123,7 @@ class sitemap_myplugin extends sitemap_base
     /**
     *   Get all the categories under the given base category.
     *   Default: empty array
+    *   This should be overridden unless there is no support for categories.
     *
     *   @param  mixed   $base   Base category
     *   @return array       Array of categories
@@ -133,7 +139,7 @@ class sitemap_myplugin extends sitemap_base
                 'image_uri' => URL to category image,
             ),
             array(
-                'id'    => Category 1 ID,
+                'id'    => Category 2 ID,
                 'title' => Category title,
                 'uri'   => URL to category display page,
                 'date'  => Last updated date (False if not used),
