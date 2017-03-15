@@ -225,7 +225,7 @@ $menu_arr = array (
 
 $header .= COM_startBlock($LANG_SMAP['admin'], '',
                           COM_getBlockTemplate('_admin_block', 'header'));
-$header .= ADMIN_createMenu($menu_arr, $LANG_SMAP['admin'], $_CONF['site_url'] . '/sitemap/images/sitemap.png');
+$header .= ADMIN_createMenu($menu_arr, $LANG_SMAP['admin_help'], $_CONF['site_url'] . '/sitemap/images/sitemap.png');
 $header .= COM_endBlock(COM_getBlockTemplate('_admin_block', 'footer'));
 
 // Displays

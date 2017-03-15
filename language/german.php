@@ -43,6 +43,8 @@ $LANG_SMAP = array (
     'access_denied'     => 'Zugriff verweigert',
     'access_denied_msg' => 'Nur Root-Benutzer haben Zugriff auf diese Seite. Dein Benutzername und IP wurden aufgezeichnet.',
     'admin'                => 'Sitemap-Plugin-Admin',
+    'admin_help'        => 'Check the boxes to change whether each element appears in the files or online sitemap. Use the selections to change the frequency and priority, and click on the arrows to change order in which the elements appear in the sitemaps. Changes take effect immediately.
+<p>To immediately recreate the sitemap XML files, click &quot;Update now&quot;.',
     'error'             => 'Installationsfehler',
     'install_header'    => 'Sitemap-Plugin - Installation/Deinstallation',
     'install_success'    => 'Installation erfolgreich',
