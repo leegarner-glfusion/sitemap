@@ -33,8 +33,8 @@ class sitemap_base
     {
         global $_USER;
         $this->uid = (int)$_USER['uid'];
-        $this->all_langs = false;
-        $this->setHTML();   // Default to HTML sitemap
+        $this->all_langs = false;   // Assume only the user's language
+        $this->setHTML();           // Default to HTML sitemap
         $this->name = $name;
         $this->config = $config;
     }
@@ -70,7 +70,7 @@ class sitemap_base
     *
     *   @param  boolean $status     True to get all languages, False to restrict
     */
-    public function setAllLangs($status = false)
+    public function setAllLangs($status = true)
     {
         $this->all_langs = $status === true ? true : false;
     }
