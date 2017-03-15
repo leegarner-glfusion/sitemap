@@ -1,4 +1,16 @@
 <?php
+/**
+*   Sitemap driver for the Static Pages.
+*
+*   @author     Mark R. Evans <mark@glfusion.org>
+*   @copyright  Copyright (c) 2008 Mark R. Evans <mark@glfusion.org>
+*   @copyright  Copyright (c) 2007-2008 Mystral-kk <geeklog@mystral-kk.net>
+*   @package    glfusion
+*   @version    2.0.0
+*   @license    http://opensource.org/licenses/gpl-2.0.php
+*               GNU Public License v2 or later
+*   @filesource
+*/
 
 // this file can't be used on its own
 if (!defined ('GVERSION')) {
