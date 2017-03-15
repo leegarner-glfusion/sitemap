@@ -23,7 +23,7 @@ class smapConfig
     /**
     *   Constructor.  Sets the local properties using the array $item.
     *
-    *   @param  integer $id     ID (plugin name) to read. Optional.
+    *   @param  string  $pi_name    Plugin name to read. Optional.
     */
     public function __construct($pi_name = '')
     {
@@ -63,8 +63,11 @@ class smapConfig
         $sql = "SELECT * FROM {$_TABLES['smap_maps']}
                 WHERE pi_name='" . DB_escapeString($this->pi_name) . "'";
         $res = DB_query($sql, 1);
-        if (!$res || DB_numRows($res < 1)) return false;
-        return $this->SetVars(DB_fetchArray($res, false), true);
+        if (!$res || DB_numRows($res < 1)) {
+            return false;
+        } else {
+            return $this->SetVars(DB_fetchArray($res, false));
+        }
     }
 
 
@@ -484,7 +487,7 @@ class smapConfig
 }
 
 // Set the static variable to the names of non-plugin sitemap drivers
-// included with the Sitemap plugin.
-smapConfig::$local = array('article', 'trackback');
+// included with the Sitemap plugin. These cannot be deleted.
+smapConfig::$local = array('article');
 
 ?>
