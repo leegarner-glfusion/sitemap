@@ -27,8 +27,8 @@ case 'toggleEnabled':
     $oldval = $_REQUEST['oldval'] == 1 ? 1 : 0;
 
     switch ($_GET['type']) {
-    case 'smap':
-    case 'gsmap':
+    case 'html':
+    case 'xml':
         $newval = SMAP_toggleEnabled($_GET['id'], $_GET['type'], $oldval);
         break;
 

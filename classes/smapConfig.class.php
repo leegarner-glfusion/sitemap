@@ -33,8 +33,8 @@ class smapConfig
         if ($pi_name == '') {
             $this->pi_name = '';
             $this->freq = 'weekly';
-            $this->gsmap_enabled = 1;
-            $this->smap_enabled = 1;
+            $this->xml_enabled = 1;
+            $this->html_enabled = 1;
             $this->orderby = 999;
             $this->priority = 0.5;
         } else {
@@ -89,8 +89,8 @@ class smapConfig
             $this->properties[$name] = (float)$value;
             break;
 
-        case 'gsmap_enabled':
-        case 'smap_enabled':
+        case 'xml_enabled':
+        case 'html_enabled':
             $this->properties[$name] = $value == 0 ? 0 : 1;
             break;
 
@@ -130,8 +130,8 @@ class smapConfig
             return false;
 
         $this->orderby = $A['orderby'];
-        $this->gsmap_enabled = $A['gsmap_enabled'];
-        $this->smap_enabled = $A['smap_enabled'];
+        $this->xml_enabled = $A['xml_enabled'];
+        $this->html_enabled = $A['html_enabled'];
         $this->priority = $A['priority'];
         $this->freq = $A['freq'];
         return true;
@@ -162,8 +162,8 @@ class smapConfig
         }
 
         $sql2 = "orderby = {$this->orderby},
-                gsmap_enabled = {$this->gsmap_enabled},
-                smap_enabled = {$this->smap_enabled},
+                xml_enabled = {$this->xml_enabled},
+                html_enabled = {$this->html_enabled},
                 priority = {$this->priority},
                 freq = '" . DB_escapeString($this->freq) . "'";
         $sql = $sql1 . $sql2 . $sql3;
@@ -234,7 +234,7 @@ class smapConfig
         if (!empty($values)) {
             $values = implode(', ', $values);
             $sql = "INSERT INTO {$_TABLES['smap_maps']}
-                (pi_name, smap_enabled, gsmap_enabled, orderby, priority)
+                (pi_name, html_enabled, xml_enabled, orderby, priority)
                 VALUES $values";
             DB_query($sql, 1);
             if (DB_error()) {

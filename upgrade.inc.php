@@ -166,8 +166,8 @@ function sitemap_upgrade_2_0_0()
         $pi_conf->Save(array(
             'priority' => $conf['priority_' . $pi_name],
             'freq' => $conf['freq_' . $pi_name],
-            'gsmap_enabled' => $conf['gsmap_' . $pi_name],
-            'smap_enabled' => $conf['sitemap_' . $pi_name],
+            'xml_enabled' => $conf['gsmap_' . $pi_name],
+            'html_enabled' => $conf['sitemap_' . $pi_name],
             'orderby' => $conf['order_' . $pi_name],
         ));
     }

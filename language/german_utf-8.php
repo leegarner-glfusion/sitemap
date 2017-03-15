@@ -115,8 +115,8 @@ $LANG_SMAP = array (
         'yearly'    => 'Yearly',
         'never'     => 'Never',
     ),
-    'gsmap_enabled' => 'Google Sitemap?',
-    'smap_enabled' => 'Sitemap?',
+    'xml_enabled' => 'XML Enabled?',
+    'html_enabled' => 'HTML Enabled?',
 );
 
 // Localization of the Admin Configuration UI

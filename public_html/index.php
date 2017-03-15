@@ -180,9 +180,9 @@ function SITEMAP_buildCategory(&$driver, $cat)
         $T->parse('temp', 't_category_list');
         $child_cats = $T->get_var('temp');
         $T->set_var(
-            'child_categories',
-            '<br />' . $child_cats . '<br />'
+            'child_categories', $child_cats
         );
+            //'<br />' . $child_cats . '<br />'
     }
 
     // Builds {category}
@@ -199,9 +199,9 @@ function SITEMAP_buildCategory(&$driver, $cat)
     $T->set_var('num_items', $num_items);
     if (!empty($items)) {
         $T->set_var(
-            'items',
-            '<br />' . $items . '<br />'
-        );
+            'items', $items);
+//            '<br />' . $items . '<br />'
+//        );
     }
 
 
@@ -241,7 +241,7 @@ $T->set_file('t_item_list','item_list.thtml');
 global $_SMAP_DRIVERS;
 $_SMAP_DRIVERS = array();
 foreach ($_SMAP_MAPS as $pi_name=>$pi_config) {
-    if ($pi_config['smap_enabled'] == 0) continue;
+    if ($pi_config['html_enabled'] == 0) continue;
     $classfile = smapConfig::getClassPath($pi_name);
     if ($classfile) {
         include_once $classfile;

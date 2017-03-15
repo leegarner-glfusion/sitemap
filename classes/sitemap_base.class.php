@@ -28,6 +28,9 @@ class sitemap_base
 
     /**
     *   Constructor. Sets internal values to defaults
+    *
+    *   @param  string  $name   Name of driver.
+    *   @param  array   $config Driver config from $_SMAP_MAPS
     */
     public function __construct($name, $config)
     {
@@ -40,27 +43,43 @@ class sitemap_base
     }
 
 
+    /**
+    *   Set the sitemap type to "HTML" for display online.
+    */
     public function setHTML()
     {
-        $this->smap_type = 'smap';
+        $this->smap_type = 'html';
     }
 
 
+    /**
+    *   Set the sitemap type to "gsmap", indicating an XML sitemap.
+    */
     public function setXML()
     {
-        $this->smap_type = 'gsmap';
+        $this->smap_type = 'xml';
     }
 
 
+    /**
+    *   Check if the current sitemap is being created for online use.
+    *
+    *   @return boolean     True if this is an HTML sitemap
+    */
     public function isHTML()
     {
-        return $this->smap_type == 'smap' ? true : false;
+        return $this->smap_type == 'html' ? true : false;
     }
 
 
+    /**
+    *   Check if the current sitemap is being created as an XML file.
+    *
+    *   @return boolean     True if this is an XML sitemap
+    */
     public function isXML()
     {
-        return $this->smap_type == 'gsmap' ? true : false;
+        return $this->smap_type == 'xml' ? true : false;
     }
 
 

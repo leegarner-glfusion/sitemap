@@ -45,6 +45,7 @@ if (!SEC_hasRights('sitemap.admin')) {
     // Someone is trying to illegally access this page
     COM_errorLog("Someone has tried to access the sitemap Admin page without proper permissions.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: {$_SERVER['REMOTE_ADDR']}", 1);
     COM_404();
+    exit;
 }
 
 //=====================================
@@ -56,6 +57,7 @@ if (!SEC_hasRights('sitemap.admin')) {
 *   <input id="sitemap_{$var_name}" name="{$var_name}" [checked="checked">
 *    <lable for="sitemap_{$var_name}">{lang_{$var_name}}</label>
 */
+/*
 function SITEMAP_createCheckBox($var_name) {
     global $_SMAP_CONF, $LANG_SMAP;
 
@@ -69,6 +71,7 @@ function SITEMAP_createCheckBox($var_name) {
             . SITEMAP_str($var_name) . '</label>' . LB;
     return $retval;
 }
+*/
 
 
 /**
@@ -111,7 +114,7 @@ function SITEMAP_getPriorityOptions($selected='')
 /**
 * Changes the display order of a given driver
 */
-function SITEMAP_changeOrder($driver, $op) {
+/*function SITEMAP_changeOrder($driver, $op) {
     global $_SMAP_CONF, $dataproxy;
 
     $all_supported_drivers = $dataproxy->getAllSupportedDriverNames();
@@ -143,6 +146,7 @@ function SITEMAP_changeOrder($driver, $op) {
         }
     }
 }
+*/
 
 //=====================================
 //  Main
@@ -291,8 +295,8 @@ function SMAP_adminField($fieldname, $fieldvalue, $A, $icon_arr)
             ) . LB;
         break;
 
-    case 'gsmap_enabled':
-    case 'smap_enabled':
+    case 'xml_enabled':
+    case 'html_enabled':
         list($fldid, $trash) = explode('_', $fieldname);
         $chk = $fieldvalue == 1 ? 'checked="checked"' : '';
         $retval = "<input id=\"{$fldid}_ena_{$pi_name}\" type=\"checkbox\" name=\"{$fieldname}[{$A['pi_name']}]\" value=\"1\" $chk onclick='SMAP_toggleEnabled(this, \"{$A['pi_name']}\", \"{$fldid}\");' />" . LB;
@@ -343,13 +347,13 @@ function SMAP_adminList()
                 'field' => 'pi_name',
                 'sort'  => true,
         ),
-        array(  'text'  => $LANG_SMAP['gsmap_enabled'],
-                'field' => 'gsmap_enabled',
+        array(  'text'  => $LANG_SMAP['xml_enabled'],
+                'field' => 'xml_enabled',
                 'sort'  => false,
                 'align' => 'center',
         ),
-        array(  'text'  => $LANG_SMAP['smap_enabled'],
-                'field' => 'smap_enabled',
+        array(  'text'  => $LANG_SMAP['html_enabled'],
+                'field' => 'html_enabled',
                 'sort' => false,
                 'align' => 'center',
         ),
@@ -443,7 +447,7 @@ foreach ($configs as $config) {
 
 $T->set_var('gsmap_drivers', $gsmap_drivers);
 
-$sitemap_fields = SITEMAP_createCheckBox('anon_access')      . '<br>' . LB;
+//$sitemap_fields = SITEMAP_createCheckBox('anon_access')      . '<br>' . LB;
 $T->set_var('sitemap_fields', $sitemap_fields);
 $T->set_var('time_zone', $_SMAP_CONF['time_zone']);
 $T->set_var('date_format', $_SMAP_CONF['date_format']);

@@ -199,7 +199,7 @@ function plugin_getconfigelementhelp_sitemap($option, $doclang='english')
 {
     global $_CONF, $_SMAP_CONF;
 
-    $doc_path = $_CONF['path_html'] . $_SMAP_CONF['pi_name'] . 
+    $doc_path = $_CONF['path_html'] . $_SMAP_CONF['pi_name'] .
                 "/docs/$doclang/config.html";
     if (!is_file($doc_path . $file)) {
         $doclang = 'english';
@@ -415,7 +415,7 @@ function SITEMAP_write($filename, $sitemap)
 function SITEMAP_createGoogleSitemap()
 {
     global $_CONF, $_SMAP_CONF, $_SMAP_MAPS;
-    
+
     $retval = false;
     $T = new Template(dirname(__FILE__) . '/templates');
     $T->set_file('smap', 'smap_google.thtml');
@@ -425,7 +425,7 @@ function SITEMAP_createGoogleSitemap()
 
     foreach ($_SMAP_MAPS as $pi_name=>$config) {
         // Skip disabled sitemaps
-        if (!$config['gsmap_enabled']) continue;
+        if (!$config['xml_enabled']) continue;
 
         // Load the driver for the sitemap, if available
         $classfile = smapConfig::getClassPath($pi_name);
@@ -491,7 +491,7 @@ function SMAP_toggleEnabled($pi_name, $fld, $oldval)
     return DB_error() ? $oldval : $newval;
 }
 
- 
+
 /**
 * callback function for the pseudo cron job
 */
