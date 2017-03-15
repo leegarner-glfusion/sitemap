@@ -34,6 +34,18 @@ the Plugin Administration page.
 The upgrade process is identical to the installation process, simply upload
 the distribution from the Plugin Administration page.
 
+## Configuration
+Global sitemap configuration is done through the glFusion Configuration panel.
+There are currently only two configuration options>
+1. Sitemap Name
+  * A semicolon-delimited list of filenames to use for the XML sitemap files.
+  * A filename beginning with "mobile" creats a mobile version of the sitemap.
+  * Default: sitemap.xml;mobile.xml
+1. Allow Anonymous Access?
+  * Determines whether anonymous users can view the HTML sitemap page at
+{site_url}/sitemap/. Has no effect on access to the XML sitemap files.
+  * Default: Yes
+
 ## Plugin Integration
 A collection of sitemap drivers for the bundled plugins is included in the
 Sitemap Plugin distribution. 
@@ -48,6 +60,9 @@ The class must be named "sitemap_<plugin_name>" and should extend
 the sitemap_base class provided by this plugin. Each supported function
 is provided in the base clase and returns a reasonable default to prevent errors.
 
+Newly installed or removed plugins that include a sitemap drivers are
+automatically added to or removed from the configuration each time the admin
+page is accessed. New plugins are enabled and placed at the end of the sitemap.
 
 Example:
 ```php
