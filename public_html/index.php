@@ -182,7 +182,6 @@ function SITEMAP_buildCategory(&$driver, $cat)
         $T->set_var(
             'child_categories', $child_cats
         );
-            //'<br />' . $child_cats . '<br />'
     }
 
     // Builds {category}
@@ -200,8 +199,6 @@ function SITEMAP_buildCategory(&$driver, $cat)
     if (!empty($items)) {
         $T->set_var(
             'items', $items);
-//            '<br />' . $items . '<br />'
-//        );
     }
 
 
@@ -217,6 +214,9 @@ function SITEMAP_buildCategory(&$driver, $cat)
 //=====================================
 //  Main
 //=====================================
+
+// Make the sitemap base class available
+USES_sitemap_class_base();
 
 // Retrieves vars
 $selected = 'all';
@@ -238,6 +238,7 @@ $T->set_file('t_item_list','item_list.thtml');
 
 // Load up an array containing all the sitemap classes.
 // Used below to write the sitemap and in the selection creation above.
+// Ensures that only valid driver classfiles are used.
 global $_SMAP_DRIVERS;
 $_SMAP_DRIVERS = array();
 foreach ($_SMAP_MAPS as $pi_name=>$pi_config) {

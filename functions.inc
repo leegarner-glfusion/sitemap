@@ -64,6 +64,9 @@ if (file_exists(dirname(__FILE__) . '/config.php')) {
 function USES_sitemap_class_config()
 {   require_once dirname(__FILE__) . '/classes/smapConfig.class.php'; }
 
+function USES_sitemap_class_base()
+{   require_once dirname(__FILE__) . '/classes/sitemap_base.class.php'; }
+
 
 // +---------------------------------------------------------------------------+
 // | glFusion Plugin API Implementations                                       |
@@ -422,6 +425,7 @@ function SITEMAP_createGoogleSitemap()
 
     $T->set_block('smap', 'smap_item', 'item');
     $have_maps = false;     // Track whether any maps are acdtual created.
+    USES_sitemap_class_base();
 
     foreach ($_SMAP_MAPS as $pi_name=>$config) {
         // Skip disabled sitemaps
@@ -463,7 +467,7 @@ function SITEMAP_createGoogleSitemap()
 
     // Writes the Google Sitemap, if any drivers actually created a map
     if ($have_maps) {
-        foreach (explode(';', $_SMAP_CONF['google_sitemap_name']) as $filename) {
+        foreach (explode(';', $_SMAP_CONF['xml_filenames']) as $filename) {
             $retval = ($retval || !SITEMAP_write($filename, $sitemap));
         }
     }
@@ -499,8 +503,5 @@ function plugin_runScheduledTask_sitemap()
 {
     SITEMAP_createGoogleSitemap();
 }
-
-//SITEMAP_loadConfig();
-include_once dirname(__FILE__) . '/classes/sitemap_base.class.php';
 
 ?>
