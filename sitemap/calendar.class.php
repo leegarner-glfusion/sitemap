@@ -22,6 +22,18 @@ class sitemap_calendar extends sitemap_base
 {
 
     /**
+    *   Get the friendly display name;
+    *
+    *   @return sring   Display Name
+    */
+    public function getDisplayName()
+    {
+        global $LANG_CAL_1;
+        return $LANG_CAL_1[16];
+    }
+
+
+    /**
     *   Get the child categories under the supplied category ID.
     *   Only primary categories (event types) are supported.
     *
