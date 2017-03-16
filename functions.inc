@@ -144,7 +144,7 @@ function plugin_getadminoption_sitemap()
             $num_items = '',
         );
     } else {
-        return array()
+        return array();
     }
 }
 
