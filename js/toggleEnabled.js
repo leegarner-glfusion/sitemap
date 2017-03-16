@@ -36,6 +36,12 @@ function SMAP_sc_toggleEnabled()
     } else {
         document.getElementById(spanid).checked = false;
     }
+    try {
+        $.UIkit.notify("<i class='uk-icon-check'></i>&nbsp;" + jsonObj.statusMessage, {timeout: 1000,pos:'top-center'});
+    }
+    catch(err) {
+        alert(jsonObj.statusMessage);
+    }
   }
 }
 
@@ -50,6 +56,7 @@ function SMAP_updateFreq(id, newfreq)
   url=url+"&id="+id;
   url=url+"&newfreq="+newfreq;
   url=url+"&sid="+Math.random();
+  SMAP_xmlHttp.onreadystatechange=SMAP_sc_noAction;
   SMAP_xmlHttp.open("GET",url,true);
   SMAP_xmlHttp.send(null);
 }
@@ -65,9 +72,28 @@ function SMAP_updatePriority(id, newpriority)
   url=url+"&id="+id;
   url=url+"&newpriority="+newpriority;
   url=url+"&sid="+Math.random();
+  SMAP_xmlHttp.onreadystatechange=SMAP_sc_noAction;
   SMAP_xmlHttp.open("GET",url,true);
   SMAP_xmlHttp.send(null);
 }
+
+// Display a status message only, no change to form content.
+function SMAP_sc_noAction()
+{
+  var newstate;
+
+  if (SMAP_xmlHttp.readyState==4 || SMAP_xmlHttp.readyState=="complete") {
+    jsonObj = JSON.parse(SMAP_xmlHttp.responseText)
+
+    try {
+        $.UIkit.notify("<i class='uk-icon-check'></i>&nbsp;" + jsonObj.statusMessage, {timeout: 1000,pos:'top-center'});
+    }
+    catch(err) {
+        alert(jsonObj.statusMessage);
+    }
+  }
+}
+
 
 function SMAP_GetXmlHttpObject()
 {
@@ -82,3 +108,27 @@ function SMAP_GetXmlHttpObject()
   }
   return objXMLHttp
 }
+
+var smap_toggle = function() {
+    var dataS = {
+        "action" :  "toggleEnabled",
+    };
+    data = $("form").serialize() + "&" + $.param(dataS);
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: site_admin_url + "/sitemap/ajax.php",
+        data: data,
+        success: function(data) {
+            var result = $.parseJSON(data["json"]);
+
+            try {
+                $.UIkit.notify("<i class='uk-icon-check'></i>&nbsp;" + result.statusMessage, {timeout: 1000,pos:'top-center'});
+            }
+            catch(err) {
+                alert(result.statusMessage);
+            }
+        }
+    });
+    return false;
+};

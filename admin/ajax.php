@@ -30,6 +30,7 @@ case 'toggleEnabled':
     case 'html':
     case 'xml':
         $newval = SMAP_toggleEnabled($_GET['id'], $_GET['type'], $oldval);
+        $newval_txt = $newval == 1 ? $LANG_SMAP['enabled'] : $LANG_SMAP['disabled'];
         break;
 
     default:
@@ -39,6 +40,8 @@ case 'toggleEnabled':
         'newval' => $newval,
         'id' => $_GET['id'],
         'type' => $_GET['type'],
+        'statusMessage' => sprintf($LANG_SMAP['smap_updated'],
+                strtoupper($_GET['type']), $_GET['id'], $newval_txt),
     );
     break;
 
@@ -49,6 +52,8 @@ case 'updatefreq':
     $result = array(
         'pi_name'   => $_GET['id'],
         'newfreq'   => $newfreq,
+        'statusMessage' => sprintf($LANG_SMAP['freq_updated'],
+                ucwords($_GET['id']), $LANG_SMAP['freqs'][$newfreq]),
     );
     break;
 
@@ -59,6 +64,8 @@ case 'updatepriority':
     $result = array(
         'pi_name'   => $_GET['id'],
         'newpriority'   => $newpriority,
+        'statusMessage' => sprintf($LANG_SMAP['prio_updated'],
+                ucwords($_GET['id']), $newpriority),
     );
     break;
 }
