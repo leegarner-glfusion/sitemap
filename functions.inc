@@ -48,6 +48,9 @@ if (file_exists($langfile)) {
     include_once dirname(__FILE__) . '/language/english.php';
 }
 
+global $_SMAP_MAPS;
+$_SMAP_MAPS = array();
+
 /** Import the configuration class, if needed */
 global $_SMAP_CONF;
 require_once $_CONF['path_system'] . 'classes/config.class.php';
@@ -73,75 +76,78 @@ function USES_sitemap_class_base()
 // +---------------------------------------------------------------------------+
 
 /**
-* Returns the items for this plugin that should appear on the main menu
+*   Returns the items for this plugin that should appear on the main menu
 *
-* NOTE: this MUST return the url/value pairs in the following format
-* $<arrayname>[<label>] = <url>
-*
-* Universal Plugin:  Uncomment and fill in variables;
-*
-* @return    array   Associative array of menu items to be added to menu
-*
+*   @return    array   Array of text=>url values.
 */
-
-global $_SMAP_MAPS;
-$_SMAP_MAPS = array();
-
-function plugin_getmenuitems_sitemap() {
+function plugin_getmenuitems_sitemap()
+{
     global $_CONF, $_SMAP_CONF;
 
-    if ( COM_isAnonUser() && ( $_SMAP_CONF['anon_access'] === false || $_CONF['loginrequired'] == 1) ) {
-        return;
+    if ( COM_isAnonUser() &&
+        (!$_SMAP_CONF['anon_access'] || $_CONF['loginrequired']) ) {
+        return array();
     }
 
-    $menuitems = array(
+    return array(
         SITEMAP_str('menu_label') => $_CONF['site_url'] . '/sitemap/index.php',
     );
-    return $menuitems;
 }
 
+
 /**
-*   Check to see if this Plugin uses comments
+*   Check to see if this Plugin uses comments. It doesn't.
 *
 *   @return   boolean true or false
 */
-function plugin_commentsupport_sitemap() {
+function plugin_commentsupport_sitemap()
+{
     return false;
 }
 
+
 /**
-* This will put an option for the plugin in the command and control block on
-* moderation.php
+*   This will put an option for the plugin in the command and control block on
+*   moderation.php
 *
-* @return   array   Array containing (plugin name, admin url, url of plugin icon)
+*   @return array   Array of (plugin name, admin url, url of plugin icon)
 */
 function plugin_cclabel_sitemap() {
     global $_CONF;
 
     if (SEC_hasRights('sitemap.admin')) {
-        $pi_name   = SITEMAP_str('menu_label');
-        $admin_url = $_CONF['site_admin_url'] . '/plugins/sitemap/index.php';
-        $icon_url  = $_CONF['site_url'] . '/sitemap/images/sitemap.png';
-        return array($pi_name, $admin_url, $icon_url);
+        return array(
+            SITEMAP_str('menu_label'),
+            $_CONF['site_admin_url'] . '/plugins/sitemap/index.php',
+            $_CONF['site_url'] . '/sitemap/images/sitemap.png',
+        );
+    } else {
+        return array();
     }
 }
 
+
 /**
-* Returns the administrative option for this plugin
+*   Returns the administrative menu option for this plugin
 *
-* @return   array   Array containing (plugin name, plugin admin url, # of items
+*   @return array   Array of (plugin name, plugin admin url, # of items
 *                   in plugin or '')
 */
-function plugin_getadminoption_sitemap() {
+function plugin_getadminoption_sitemap()
+{
     global $_CONF, $_TABLES;
 
     if (SEC_hasRights('sitemap.admin')) {
-        $pi_name   = SITEMAP_str('menu_label');
-        $admin_url = $_CONF['site_admin_url'] . '/plugins/sitemap/index.php';
-        $num_items = '';
-        return array($pi_name, $admin_url, $num_items);
+        return array(
+            SITEMAP_str('menu_label'),
+            $_CONF['site_admin_url'] . '/plugins/sitemap/index.php',
+            $num_items = '',
+        );
+    } else {
+        return array()
     }
 }
+
 
 /**
 *   Returns the current code version for this plugin
@@ -153,6 +159,7 @@ function plugin_chkVersion_sitemap()
     global $_SMAP_CONF;
     return $_SMAP_CONF['pi_version'];
 }
+
 
 /**
 *   Returns the user option for this plugin. There is none.
@@ -350,7 +357,11 @@ function SITEMAP_convertDate($timestamp)
 
 
 /**
-* Writes a Google Sitemap
+*   Write out the XML Sitemap
+*
+*   @param  string  $filename   Filename to write
+*   @param  string  $sitemap    Sitemap content
+*   @return boolean     True on success, False on failure
 */
 function SITEMAP_write($filename, $sitemap)
 {
@@ -358,10 +369,10 @@ function SITEMAP_write($filename, $sitemap)
 
     $retval = false;
     $filename = trim($filename);
-    if (empty($filename)) return;
+    if (empty($filename)) return false;
 
     /**
-    * for Google Mobile Sitemap
+    *   Alterations for Google Mobile Sitemap
     */
     if (preg_match("/mobile/i", $filename)) {
         $sitemap = str_replace(
@@ -398,10 +409,10 @@ function SITEMAP_write($filename, $sitemap)
         $result = @fwrite($fh, $sitemap);
         if (($result === false) OR ($result != strlen($sitemap))) {
             COM_errorLog('Sitemap: cannot write into Google sitemap file fully: ' . $path);
+        } else {
+            $retval = true;
         }
-
         @flock($fh, LOCK_UN);
-        $retval = true;
     } else {
         COM_errorLog('Sitemap: cannot write-lock Google sitemap file: ' . $path);
     }
@@ -456,7 +467,8 @@ function SITEMAP_createGoogleSitemap()
                 'url'   => $item['uri'],
                 'date'  => $date,
                 'freq'  => $config['freq'],
-                'priority'  => $config['priority'] != 0.5 ? sprintf('%1.1f', (float)$config['priority']) : '',
+                'priority'  => $config['priority'] != 0.5 ?
+                        sprintf('%1.1f', (float)$config['priority']) : '',
             ) );
             $T->parse('item', 'smap_item', true);
         }
@@ -476,7 +488,8 @@ function SITEMAP_createGoogleSitemap()
 
 
 /**
-*  Update the 'enabled' value for a sitemap
+*   Update the 'enabled' value for a sitemap.
+*   Called from the admin ajax.php script.
 *
 *  @param  integer $oldval  Current value
 *  @param  string  $fld     Field, smap or gsmap
