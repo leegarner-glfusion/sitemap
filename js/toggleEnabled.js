@@ -40,7 +40,7 @@ function SMAP_sc_toggleEnabled()
         $.UIkit.notify("<i class='uk-icon-check'></i>&nbsp;" + jsonObj.statusMessage, {timeout: 1000,pos:'top-center'});
     }
     catch(err) {
-        alert(jsonObj.statusMessage);
+        //alert(jsonObj.statusMessage);
     }
   }
 }
@@ -89,7 +89,7 @@ function SMAP_sc_noAction()
         $.UIkit.notify("<i class='uk-icon-check'></i>&nbsp;" + jsonObj.statusMessage, {timeout: 1000,pos:'top-center'});
     }
     catch(err) {
-        alert(jsonObj.statusMessage);
+        //alert(jsonObj.statusMessage);
     }
   }
 }

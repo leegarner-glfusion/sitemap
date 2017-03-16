@@ -5,7 +5,7 @@
 *   @author     Lee Garner <lee@leegarner.com>
 *   @copyright  Copyright (c) 2017 Lee Garner <lee@leegarner.com>
 *   @package    sitemap
-*   @version    0.1.7
+*   @version    2.0.0
 *   @license    http://opensource.org/licenses/gpl-2.0.php 
 *               GNU Public License v2 or later
 *   @filesource
@@ -41,7 +41,7 @@ case 'toggleEnabled':
         'id' => $_GET['id'],
         'type' => $_GET['type'],
         'statusMessage' => sprintf($LANG_SMAP['smap_updated'],
-                strtoupper($_GET['type']), $_GET['id'], $newval_txt),
+                strtoupper($_GET['type']), ucwords($_GET['id']), $newval_txt),
     );
     break;
 
