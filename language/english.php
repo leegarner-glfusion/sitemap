@@ -83,7 +83,7 @@ $LANG_SMAP = array (
     'sitemap_items'     => 'Items to be included in sitemap',
     'gsmap_setting'     => 'Google sitemap configuration',
     'file_creation'     => 'File creation settings',
-    'google_sitemap_name' => 'File name: ',
+    'xml_filenames' => 'File name: ',
     'time_zone'         => 'Time zone: ',
     'update_now'        => 'Update now!',
     'last_updated'      => 'Last updated: ',
@@ -125,7 +125,7 @@ $LANG_configsections['sitemap'] = array(
 );
 
 $LANG_confignames['sitemap'] = array(
-    'google_sitemap_name' => 'Sitemap filename(s)',
+    'xml_filenames' => 'Sitemap filename(s)',
     'anon_access' => 'Allow access by anonymous users?',
 );
 $LANG_configsubgroups['sitemap'] = array(

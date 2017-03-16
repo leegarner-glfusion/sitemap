@@ -28,7 +28,7 @@ $_SMAP_DEFAULT = array();
 *   Names of sitemap files. By default, sitemap.xml and a moblie version
 *   are created
 */
-$_SMAP_DEFAULT['google_sitemap_name'] = 'sitemap.xml;mobile.xml';
+$_SMAP_DEFAULT['xml_filenames'] = 'sitemap.xml;mobile.xml';
 
 /**
 *   Can anonymous users view the sitemap?
@@ -51,7 +51,7 @@ function plugin_initconfig_sitemap()
     if (!$c->group_exists($me)) {
         $c->add('sg_main', NULL, 'subgroup', 0, 0, NULL, 0, true, $me);
         $c->add('fs_main', NULL, 'fieldset', 0, 0, NULL, 0, true, $me);
-        $c->add('google_sitemap_name', $_SMAP_DEFAULT['google_sitemap_name'],
+        $c->add('xml_filenames', $_SMAP_DEFAULT['xml_filenames'],
                 'text', 0, 0, 0, 10, true, $me);
         $c->add('anon_access', $_SMAP_DEFAULT['anon_access'],
                 'select', 0, 0, 3, 20, true, $me);

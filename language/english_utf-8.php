@@ -83,7 +83,7 @@ $LANG_SMAP = array (
     'sitemap_items'     => 'Items to be included in sitemap',
     'gsmap_setting'     => 'Google sitemap configuration',
     'file_creation'     => 'File creation settings',
-    'google_sitemap_name' => 'File name: ',
+    'xml_filenames' => 'File name: ',
     'time_zone'         => 'Time zone: ',
     'update_now'        => 'Update now!',
     'last_updated'      => 'Last updated: ',
@@ -116,6 +116,11 @@ $LANG_SMAP = array (
     ),
     'xml_enabled' => 'XML Enabled?',
     'html_enabled' => 'HTML Enabled?',
+    'smap_updated' => '%1$s %2$s sitemap has been %3$s.',
+    'freq_updated' => '%1$s Sitemap Frequency is now %2$s',
+    'prio_updated' => '%1$s Sitemap Priority is now %2$s',
+    'enabled'   => 'enabled',
+    'disabled'  => 'disabled',
 );
 
 // Localization of the Admin Configuration UI
@@ -125,7 +130,7 @@ $LANG_configsections['sitemap'] = array(
 );
 
 $LANG_confignames['sitemap'] = array(
-    'google_sitemap_name' => 'Sitemap filename(s)',
+    'xml_filenames' => 'Sitemap filename(s)',
     'anon_access' => 'Allow access by anonymous users?',
 );
 $LANG_configsubgroups['sitemap'] = array(
