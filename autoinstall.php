@@ -149,7 +149,7 @@ function plugin_load_configuration_sitemap()
 {
     global $_CONF, $_SMAP_CONF, $_TABLES;
 
-    require_once $_CONF['path'].'plugins/'.$_SMAP_CONF['pi_name'].'/install_defaults.php';
+    require_once dirname(__FILE__) . '/install_defaults.php';
     return plugin_initconfig_sitemap();
 }
 
