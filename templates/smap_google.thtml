@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<!-- BEGIN smap_item -->
+  <url>
+    <loc>{url}</loc>
+    <lastmod>{date}</lastmod>
+    <changefreq>{freq}</changefreq>
+{!if priority}
+    <priority>{priority}</priority>
+{!endif}
+  </url>
+<!-- END smap_item -->
+</urlset>

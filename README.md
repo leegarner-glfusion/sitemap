@@ -3,7 +3,13 @@ Version: 2.0.0
 
 For the latest documentation, please see
 
-        http://www.glfusion.org/wiki/doku.php?id=sitemap:start
+	http://www.glfusion.org/wiki/doku.php?id=sitemap:start
+
+## License
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
 ## Description
 The SiteMap plugin creates a Google compatible sitemap.xml file of your
@@ -12,9 +18,6 @@ users. A mobile-compatible sitemap named "mobile.xml" can also be created.
 
 SiteMap honors content permissions, only showing those items which the
 user has permissions to view.
-
-Plugins can supply their own driver files to have content included in the sitemaps.
-See "Plugin Integration" below. The sitemap plugin supplies a driver for articles.
 
 ## System Requirements
 SiteMap has the following system requirements:
@@ -31,18 +34,37 @@ the Plugin Administration page.
 The upgrade process is identical to the installation process, simply upload
 the distribution from the Plugin Administration page.
 
+## Configuration
+Global sitemap configuration is done through the glFusion Configuration panel.
+There are currently only two configuration options>
+1. Sitemap Name
+  * A semicolon-delimited list of filenames to use for the XML sitemap files.
+  * A filename beginning with "mobile" creats a mobile version of the sitemap.
+  * Default: sitemap.xml;mobile.xml
+1. Allow Anonymous Access?
+  * Determines whether anonymous users can view the HTML sitemap page at
+{site_url}/sitemap/. Has no effect on access to the XML sitemap files.
+  * Default: Yes
+
 ## Plugin Integration
-The Sitemap plugin can add data from other plugins to the online and XML
-sitemaps. Each plugin must supply a class file named "plugin_name.class.php"
-in the "sitemap" subdirectory under the plugin's private directory.
-For example: private/plugins/myplugin/sitemap/myplugin.class.php
+A collection of sitemap drivers for the bundled plugins is included in the
+Sitemap Plugin distribution. 
 
-The class must be named "Sitemap_<plugin_name>" to be used. Visiting the Sitemap admin
-page will cause new plugins to be added to the sitemap configuration if they include a
-sitemap class file.
+A plugin may provide it's own driver to be used instead of the default driver
+by including a class file named "plugin_name.class.php"
+in the "sitemap" subdirectory under the plugin's private directory. Example:
 
-Example sitemap class file:
+    private/plugins/myplugin/sitemap/myplugin.class.php
 
+The class must be named "sitemap_<plugin_name>" and should extend
+the sitemap_base class provided by this plugin. Each supported function
+is provided in the base clase and returns a reasonable default to prevent errors.
+
+Newly installed or removed plugins that include a sitemap drivers are
+automatically added to or removed from the configuration each time the admin
+page is accessed. New plugins are enabled and placed at the end of the sitemap.
+
+Example:
 ```php
 class sitemap_myplugin extends sitemap_base
 {
@@ -51,7 +73,7 @@ class sitemap_myplugin extends sitemap_base
     *   Get the entry point for the plugin. Typically this is
     *   the index.php under public_html/plugin_name.
     *
-    *   @return string      URL to plugin
+    *   @return string      URL to plugin, default {site_url}/{myplugin}/index.php
     */
     public function getEntryPoint()
     {
@@ -63,7 +85,7 @@ class sitemap_myplugin extends sitemap_base
     *   Get the name of this sitemap driver. This is normally just the
     *   plugin name.
     *
-    *   @return string      Name of driver (plugin)
+    *   @return string      Name of driver (plugin), default is the plugin name
     */
     public function getName()
     {
@@ -74,8 +96,9 @@ class sitemap_myplugin extends sitemap_base
     /**
     *   Get the friendly name for this plugin. This could be taken from a
     *   languange file.
+    *   This function should be overridden.
     *
-    *   @return string      Plugin friendly name
+    *   @return string      Plugin friendly name, default is the plugin name
     */
     public function getDisplayName()
     {
@@ -85,11 +108,12 @@ class sitemap_myplugin extends sitemap_base
 
     /**
     *   Get all the items for this plugin under the given category ID.
+    *   This function should be overridden.
     *
     *   @param  mixed   $cat_id     Category ID
-    *   @return array       Array of items
+    *   @return array       Array of items, default is an empty array
     */
-    public function getItems($cat_id = 0, $all_langs = false)
+    public function getItems($cat_id = 0)
     {
         return array(
             array(
@@ -113,6 +137,8 @@ class sitemap_myplugin extends sitemap_base
 
     /**
     *   Get all the categories under the given base category.
+    *   Default: empty array
+    *   This should be overridden unless there is no support for categories.
     *
     *   @param  mixed   $base   Base category
     *   @return array       Array of categories
@@ -128,7 +154,7 @@ class sitemap_myplugin extends sitemap_base
                 'image_uri' => URL to category image,
             ),
             array(
-                'id'    => Category 1 ID,
+                'id'    => Category 2 ID,
                 'title' => Category title,
                 'uri'   => URL to category display page,
                 'date'  => Last updated date (False if not used),

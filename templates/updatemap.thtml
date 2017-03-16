@@ -1,0 +1,15 @@
+{# begin {templatelocation} #}
+<form action="{site_admin_url}/plugins/sitemap/index.php" class="uk-form uk-form-horizontal" method="post">
+  <div class="uk-form-row">
+    <label class="uk-form-label" for="lastupdate">{$LANG_SMAP['last_updated']}</label>
+    <div class="uk-form-controls">
+      {last_updated}
+    </div>
+  </div>
+  <div class="uk-form-row">
+    <div class="uk-form-controls">
+      <button name="updatenow" class="uk-button uk-button-primary" type="submit">{$LANG_SMAP['update_now']}</button>
+    </div>
+  </div>
+</form>
+{# end {templatelocation} #}

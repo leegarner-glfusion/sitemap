@@ -1,3 +1,4 @@
+{# begin {templatelocation} #}
 <form action="{this_script}" method="post">
 	<h3>{lang_sitemap_setting}</h3>
 	<fieldset style="width: 600px;">
@@ -60,3 +61,4 @@
 
 	<input name="submit" type="submit" value="{lang_submit}"{xhtml}>
 </form>
+{# end {templatelocation} #}
