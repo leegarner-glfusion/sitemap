@@ -157,7 +157,7 @@ function sitemap_upgrade_2_0_0()
         if (in_array($pi_name, $pi_confs)) continue;
         // crude method to see if $key refers to a plugin
         if (!in_array($pi_name, $internal) &&
-            !in_array($pi_name, $_PLUGINS)) i{
+            !in_array($pi_name, $_PLUGINS)) {
             continue;
         }
 
