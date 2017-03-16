@@ -22,14 +22,14 @@ if (!in_array('sitemap', $_PLUGINS) ||
     exit;
 }
 
-switch ($_GET['action']) {
+switch ($_POST['action']) {
 case 'toggleEnabled':
     $oldval = $_REQUEST['oldval'] == 1 ? 1 : 0;
 
-    switch ($_GET['type']) {
+    switch ($_POST['type']) {
     case 'html':
     case 'xml':
-        $newval = SMAP_toggleEnabled($_GET['id'], $_GET['type'], $oldval);
+        $newval = SMAP_toggleEnabled($_POST['id'], $_POST['type'], $oldval);
         $newval_txt = $newval == 1 ? $LANG_SMAP['enabled'] : $LANG_SMAP['disabled'];
         break;
 
@@ -38,34 +38,34 @@ case 'toggleEnabled':
     }
     $result = array(
         'newval' => $newval,
-        'id' => $_GET['id'],
-        'type' => $_GET['type'],
+        'id' => $_POST['id'],
+        'type' => $_POST['type'],
         'statusMessage' => sprintf($LANG_SMAP['smap_updated'],
-                strtoupper($_GET['type']), ucwords($_GET['id']), $newval_txt),
+                strtoupper($_POST['type']), ucwords($_POST['id']), $newval_txt),
     );
     break;
 
 case 'updatefreq':
     USES_sitemap_class_config();
-    $M = new smapConfig($_GET['id']);
-    $newfreq = $M->updateFreq($_GET['newfreq']);
+    $M = new smapConfig($_POST['id']);
+    $newfreq = $M->updateFreq($_POST['newfreq']);
     $result = array(
-        'pi_name'   => $_GET['id'],
+        'pi_name'   => $_POST['id'],
         'newfreq'   => $newfreq,
         'statusMessage' => sprintf($LANG_SMAP['freq_updated'],
-                ucwords($_GET['id']), $LANG_SMAP['freqs'][$newfreq]),
+                ucwords($_POST['id']), $LANG_SMAP['freqs'][$newfreq]),
     );
     break;
 
 case 'updatepriority':
     USES_sitemap_class_config();
-    $M = new smapConfig($_GET['id']);
-    $newpriority = $M->updatePriority($_GET['newpriority']);
+    $M = new smapConfig($_POST['id']);
+    $newpriority = $M->updatePriority($_POST['newpriority']);
     $result = array(
-        'pi_name'   => $_GET['id'],
+        'pi_name'   => $_POST['id'],
         'newpriority'   => $newpriority,
         'statusMessage' => sprintf($LANG_SMAP['prio_updated'],
-                ucwords($_GET['id']), $newpriority),
+                ucwords($_POST['id']), $newpriority),
     );
     break;
 }
