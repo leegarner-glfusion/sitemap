@@ -428,7 +428,7 @@ class smapConfig
         $reload_maps = false;     // Flag to indicate maps need reloading
 
         // Get any plugins that aren't already in the sitemap table and add them
-        $add_values = array();
+        $values = array();
         foreach ($_PLUGINS as $pi_name) {
             if (!isset($_SMAP_MAPS[$pi_name])) {
                 // Plugin not in config table, see if there's a driver for it
@@ -448,7 +448,8 @@ class smapConfig
         $values = array();
         foreach ($_SMAP_MAPS as $pi_name=>$info) {
             if (in_array($pi_name, self::$local)) continue;
-            if (!in_array($pi_name, $_PLUGINS)) {
+            if (!in_array($pi_name, $_PLUGINS) ||
+                !is_file(self::getClassPath($pi_name))) {
                 $values[] = $pi_name;
             }
         }
