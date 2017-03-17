@@ -332,6 +332,12 @@ class smapConfig
     /**
     *   Load all the sitemap configs into the config array.
     *   Updates the global array variable, no return value.
+    *
+    *   First loads all the configured sitemaps where the driver belongs
+    *   to an installed plugin, then calls updateConfigs() to scan for
+    *   additional plugins with drivers.
+    *
+    *   @param  boolean $del    True to delete configs for disabled plugins
     */
     public static function loadConfigs($del = false)
     {
@@ -432,11 +438,12 @@ class smapConfig
     */
     public static function updateConfigs($del = false)
     {
-        global $_PLUGINS, $_SMAP_MAPS, $_CONF;
+        global $_PLUGINS, $_PLUGIN_INFO, $_SMAP_MAPS, $_CONF;
 
         $reload_maps = false;     // Flag to indicate maps need reloading
 
-        // Get any plugins that aren't already in the sitemap table and add them
+        // Get any enabled plugins that aren't already in the sitemap table
+        // and add them
         $values = array();
         foreach ($_PLUGINS as $pi_name) {
             if (!isset($_SMAP_MAPS[$pi_name])) {
@@ -452,20 +459,19 @@ class smapConfig
         }
 
         // Now clean out entries for removed plugins, if any.
-        // Ignore local drivers and just remove configs for plugins
-        // that are not in the $_PLUGINS array.
-        if ($del) {
-            $values = array();
-            foreach ($_SMAP_MAPS as $pi_name=>$info) {
-                if (in_array($pi_name, self::$local)) continue;
-                if (!in_array($pi_name, $_PLUGINS) ||
-                    !is_file(self::getClassPath($pi_name))) {
-                    $values[] = $pi_name;
-                }
+        // Ignore local drivers and just remove configs for uninstalled
+        // plugins, e.g. not in the $_PLUGIN_INFO array, or those for
+        // which a driver can't be found.
+        $values = array();
+        foreach ($_SMAP_MAPS as $pi_name=>$info) {
+            if (in_array($pi_name, self::$local)) continue;
+            if (!isset($_PLUGIN_INFO[$pi_name]) ||
+                !is_file(self::getClassPath($pi_name)) ) {
+                $values[] = $pi_name;
             }
-            if (!empty($values)) {
-                self::Delete($values);
-            }
+        }
+        if (!empty($values)) {
+            self::Delete($values);
         }
     }
 
