@@ -117,6 +117,12 @@ $LANG_SMAP = array (
     ),
     'xml_enabled' => 'XML Enabled?',
     'html_enabled' => 'HTML Enabled?',
+    'smap_updated' => '%1$s %2$s sitemap has been %3$s.',
+    'freq_updated' => '%1$s Sitemap Frequency is now %2$s',
+    'prio_updated' => '%1$s Sitemap Priority is now %2$s',
+    'enabled'   => 'enabled',
+    'disabled'  => 'disabled',
+    'uncategorized' => 'Uncategorized',
 );
 
 // Localization of the Admin Configuration UI
