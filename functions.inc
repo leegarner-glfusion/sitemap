@@ -429,13 +429,16 @@ function SITEMAP_createGoogleSitemap()
 {
     global $_CONF, $_SMAP_CONF, $_SMAP_MAPS;
 
+    USES_sitemap_class_base();
+    USES_sitemap_class_config();
+
+    smapConfig::loadConfigs();
+
     $retval = false;
     $T = new Template(dirname(__FILE__) . '/templates');
     $T->set_file('smap', 'smap_google.thtml');
 
     $T->set_block('smap', 'smap_item', 'item');
-    $have_maps = false;     // Track whether any maps are acdtual created.
-    USES_sitemap_class_base();
 
     foreach ($_SMAP_MAPS as $pi_name=>$config) {
         // Skip disabled sitemaps
@@ -471,16 +474,13 @@ function SITEMAP_createGoogleSitemap()
             ) );
             $T->parse('item', 'smap_item', true);
         }
-        $have_maps = true;      // Have at least one map
     }
     $T->parse('output', 'smap');
     $sitemap = $T->finish($T->get_var('output'));
 
-    // Writes the Google Sitemap, if any drivers actually created a map
-    if ($have_maps) {
-        foreach (explode(';', $_SMAP_CONF['xml_filenames']) as $filename) {
-            $retval = ($retval || !SITEMAP_write($filename, $sitemap));
-        }
+    // Writes the Google Sitemap
+    foreach (explode(';', $_SMAP_CONF['xml_filenames']) as $filename) {
+        $retval = ($retval || !SITEMAP_write($filename, $sitemap));
     }
     return !$retval;
 }
