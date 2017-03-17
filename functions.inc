@@ -84,14 +84,13 @@ function plugin_getmenuitems_sitemap()
 {
     global $_CONF, $_SMAP_CONF;
 
-    if ( COM_isAnonUser() &&
-        (!$_SMAP_CONF['anon_access'] || $_CONF['loginrequired']) ) {
+    if (SMAP_canView()) {
+        return array(
+            SITEMAP_str('menu_label') => $_CONF['site_url'] . '/sitemap/index.php',
+        );
+    } else {
         return array();
     }
-
-    return array(
-        SITEMAP_str('menu_label') => $_CONF['site_url'] . '/sitemap/index.php',
-    );
 }
 
 
@@ -506,6 +505,24 @@ function SMAP_toggleEnabled($pi_name, $fld, $oldval)
                 $fld . '_enabled', $newval,
                 'pi_name', DB_escapeString($pi_name));
     return DB_error() ? $oldval : $newval;
+}
+
+
+/**
+*   Check whether a visitor has access to view the online sitemap
+*
+*   @return boolean     True if access is allowed, False if not
+*/
+function SMAP_canView()
+{
+    global $_CONF, $_SMAP_CONF;
+
+    if ( COM_isAnonUser() &&
+        (!$_SMAP_CONF['anon_access'] || $_CONF['loginrequired']) ) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 

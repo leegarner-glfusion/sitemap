@@ -34,8 +34,7 @@
 
 require_once '../lib-common.php';
 
-if (!in_array('sitemap', $_PLUGINS) ||
-    (COM_isAnonUser() && ($_SMAP_CONF['anon_access'] == 0 || $_CONF['loginrequired'] == 1))) {
+if (!in_array('sitemap', $_PLUGINS) || !SMAP_canView()) {
     COM_404();
     exit;
 }
