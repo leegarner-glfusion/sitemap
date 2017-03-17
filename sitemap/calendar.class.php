@@ -65,7 +65,7 @@ class sitemap_calendar extends sitemap_base
             $entries[] = array(
                 'id'        => $A['event_type'],
                 'pid'       => false,
-                'title'     => $$title,
+                'title'     => $title,
                 'uri'       => false,
                 'date'      => false,
                 'image_uri' => false,
