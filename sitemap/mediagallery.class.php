@@ -110,7 +110,7 @@ class sitemap_mediagallery extends sitemap_base
                 'pid'       => $A['album_parent'],
                 'title'     => $A['album_title'],
                 'uri'       => $_MG_CONF['site_url'] . '/album.php?aid='
-                                . $entry['id'],
+                                . $A['album_id'],
                 'date'      => $A['last_update'],
                 'image_uri' => false,
             );
@@ -132,7 +132,7 @@ class sitemap_mediagallery extends sitemap_base
     */
     public function getItems($category = false)
     {
-        global $_CONF, $_TABLES, $_MG_CONF;
+        global $_CONF, $_TABLES, $_MG_CONF, $LANG_SMAP;
 
         $entries = array();
         $category = (int)$category;
