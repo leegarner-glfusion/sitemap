@@ -34,22 +34,15 @@
 
 require_once '../lib-common.php';
 
-if (!in_array('sitemap', $_PLUGINS)) {
-    COM_404();
-    exit;
-}
-
-// Loads config
-//SITEMAP_loadConfig();
-USES_sitemap_class_config();
-smapConfig::loadConfigs();
-
 if (!in_array('sitemap', $_PLUGINS) ||
     (COM_isAnonUser() && ($_SMAP_CONF['anon_access'] == 0 || $_CONF['loginrequired'] == 1))) {
     COM_404();
     exit;
 }
 
+// Loads config
+USES_sitemap_class_config();
+smapConfig::loadConfigs();
 
 //===========================
 //  Functions
@@ -159,7 +152,7 @@ function SITEMAP_buildItems(&$driver, $pid)
 */
 function SITEMAP_buildCategory(&$driver, $cat)
 {
-    global $T;
+    global $T, $LANG_SMAP;
 
     $num_total_items = 0;
     $temp = $T->get_var('child_categories');    // Push $T->var('child_categories')
@@ -185,6 +178,10 @@ function SITEMAP_buildCategory(&$driver, $cat)
     }
 
     // Builds {category}
+    if ($cat['title'] == '') {
+        // If an empty category title comes in, default to 'Uncategorized'
+        $cat['title'] = $LANG_SMAP['uncategorized'];
+    }
     if ($cat['uri'] !== false) {
         $category_link = '<a href="' . $cat['uri'] . '">'
               . $driver->escape($cat['title']) . '</a>';

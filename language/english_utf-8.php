@@ -121,6 +121,7 @@ $LANG_SMAP = array (
     'prio_updated' => '%1$s Sitemap Priority is now %2$s',
     'enabled'   => 'enabled',
     'disabled'  => 'disabled',
+    'uncategorized' => 'Uncategorized',
 );
 
 // Localization of the Admin Configuration UI
