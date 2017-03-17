@@ -118,6 +118,7 @@ $LANG_SMAP = array (
     'enabled'   => 'enabled',
     'disabled'  => 'disabled',
     'uncategorized' => 'Uncategorized',
+    'untitled' => 'Untitled',
 );
 
 // Localization of the Admin Configuration UI

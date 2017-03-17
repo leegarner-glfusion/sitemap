@@ -156,7 +156,9 @@ class sitemap_mediagallery extends sitemap_base
         }
 
         while (($A = DB_fetchArray($result, false)) !== FALSE) {
-            if (empty($A['media_title'])) $A['media_title'] = 'Untitled';
+            if (empty($A['media_title'])) {
+                $A['media_title'] = $LANG_SMAP['untitled'];
+            }
             $entries[] = array(
                 'id'        => $A['media_id'],
                 'title'     => $A['media_title'],
