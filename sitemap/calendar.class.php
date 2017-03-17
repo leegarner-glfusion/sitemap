@@ -42,7 +42,7 @@ class sitemap_calendar extends sitemap_base
     */
     function getChildCategories($pid = false)
     {
-        global $_CONF, $_TABLES;
+        global $_CONF, $_TABLES, $LANG_SMAP;
 
         $entries = array();
 
@@ -59,10 +59,13 @@ class sitemap_calendar extends sitemap_base
         }
 
         while (($A = DB_fetchArray($result, false)) !== FALSE) {
+            // Replace empty title string with "uncategorized"
+            $title = $A['event_type'];
+            if (empty($title)) $title = $LANG_SMAP['uncategorized'];
             $entries[] = array(
                 'id'        => $A['event_type'],
                 'pid'       => false,
-                'title'     => $A['event_type'],
+                'title'     => $$title,
                 'uri'       => false,
                 'date'      => false,
                 'image_uri' => false,
