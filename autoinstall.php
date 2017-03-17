@@ -134,9 +134,6 @@ function plugin_postinstall_sitemap()
 
     // Add the local sitemaps (articles, trackbacks, etc.)
     smapConfig::Add(smapConfig::$local);
-    // Scans all the installed plugins and installs them if drivers
-    // are available
-    smapConfig::cleanConfigs();
 }
 
 

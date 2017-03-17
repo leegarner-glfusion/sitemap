@@ -333,9 +333,9 @@ class smapConfig
     *   Load all the sitemap configs into the config array.
     *   Updates the global array variable, no return value.
     */
-    public static function loadConfigs()
+    public static function loadConfigs($del = false)
     {
-        global $_SMAP_MAPS, $_TABLES;
+        global $_SMAP_MAPS, $_TABLES, $_PLUGINS;
 
         $_SMAP_MAPS = array();
         $sql = "SELECT * FROM {$_TABLES['smap_maps']}
@@ -346,9 +346,16 @@ class smapConfig
             return;
         }
 
-        while (($A = DB_fetchArray($result, false)) !== FALSE) {
-            $_SMAP_MAPS[$A['pi_name']] = $A;
+        // Only load configs for enabled plugins
+        while ($A = DB_fetchArray($result, false)) {
+            if (in_array($A['pi_name'], $_PLUGINS)) {
+                $_SMAP_MAPS[$A['pi_name']] = $A;
+            }
         }
+
+        // Update configs for missing plugins, and optionally delete removed
+        // plugins
+        self::updateConfigs($del);
     }
 
 
@@ -420,8 +427,10 @@ class smapConfig
     *   and adding new ones.
     *
     *   Updates the $_SMAP_MAPS config table directly; no return value.
+    *
+    *   @param  boolean $del    True to delete maps, False to only add new
     */
-    public static function cleanConfigs()
+    public static function updateConfigs($del = false)
     {
         global $_PLUGINS, $_SMAP_MAPS, $_CONF;
 
@@ -445,16 +454,18 @@ class smapConfig
         // Now clean out entries for removed plugins, if any.
         // Ignore local drivers and just remove configs for plugins
         // that are not in the $_PLUGINS array.
-        $values = array();
-        foreach ($_SMAP_MAPS as $pi_name=>$info) {
-            if (in_array($pi_name, self::$local)) continue;
-            if (!in_array($pi_name, $_PLUGINS) ||
-                !is_file(self::getClassPath($pi_name))) {
-                $values[] = $pi_name;
+        if ($del) {
+            $values = array();
+            foreach ($_SMAP_MAPS as $pi_name=>$info) {
+                if (in_array($pi_name, self::$local)) continue;
+                if (!in_array($pi_name, $_PLUGINS) ||
+                    !is_file(self::getClassPath($pi_name))) {
+                    $values[] = $pi_name;
+                }
             }
-        }
-        if (!empty($values)) {
-            self::Delete($values);
+            if (!empty($values)) {
+                self::Delete($values);
+            }
         }
     }
 

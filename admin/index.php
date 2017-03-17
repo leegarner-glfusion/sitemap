@@ -218,7 +218,8 @@ USES_sitemap_class_base();
 USES_sitemap_class_config();
 
 // Loads Sitemap plugin configuration first of all
-smapConfig::loadConfigs();
+// Also cleans out disabled or deleted plugins
+smapConfig::loadConfigs(true);
 
 $expected = array(
     'move', 'updatenow',
@@ -244,9 +245,6 @@ case 'updatenow':
     SITEMAP_createGoogleSitemap();
     break;
 }
-
-// Get any plugins that aren't already in the sitemap table and add them
-smapConfig::cleanConfigs();
 
 $header = '';
 $menu_arr = array (
