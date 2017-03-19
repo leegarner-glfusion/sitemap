@@ -37,8 +37,15 @@ function sitemap_do_upgrade()
 {
     global $_SMAP_CONF, $_PLUGIN_INFO;
 
-    if (isset($_PLUGIN_INFO[$_SMAP_CONF['pi_name']])) {
-        $current_ver = $_PLUGIN_INFO[$_SMAP_CONF['pi_name']];
+    $pi_name = $_SMAP_CONF['pi_name'];
+    if (isset($_PLUGIN_INFO[$pi_name])) {
+        if (is_array($_PLUGIN_INFO[$pi_name])) {
+            // glFusion >= 1.6.6
+            $current_ver = $_PLUGIN_INFO[$pi_name]['pi_version'];
+        } else {
+            // legacy
+            $current_ver = $_PLUGIN_INFO[$pi_name];
+        }
     } else {
         return false;
     }
