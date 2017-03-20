@@ -437,7 +437,7 @@ class smapConfig
     */
     public static function updateConfigs()
     {
-        global $_PLUGINS, $_PLUGIN_INFO, $_SMAP_MAPS, $_CONF;
+        global $_PLUGINS, $_PLUGIN_INFO, $_SMAP_MAPS, $_CONF, $_SMAP_CONF;
 
         $reload_maps = false;     // Flag to indicate maps need reloading
 
