@@ -219,7 +219,7 @@ USES_sitemap_class_config();
 
 // Loads Sitemap plugin configuration first of all
 // Also cleans out disabled or deleted plugins
-smapConfig::loadConfigs(true);
+smapConfig::loadConfigs();
 
 $expected = array(
     'move', 'updatenow',

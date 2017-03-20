@@ -38,6 +38,13 @@ $_SMAP_DEFAULT['xml_filenames'] = 'sitemap.xml;mobile.xml';
 $_SMAP_DEFAULT['anon_access'] = 1;
 
 /**
+*   Automatically add new plugins as they're installed?
+*   1 = Yes, 0 = No
+*/
+$_SMAP_DEFAULT['auto_add_plugins'] = 1;
+
+
+/**
 *   Initialize Banner plugin configuration
 *
 *   @return   boolean     true: success; false: an error occurred
@@ -54,6 +61,8 @@ function plugin_initconfig_sitemap()
         $c->add('xml_filenames', $_SMAP_DEFAULT['xml_filenames'],
                 'text', 0, 0, 0, 10, true, $me);
         $c->add('anon_access', $_SMAP_DEFAULT['anon_access'],
+                'select', 0, 0, 3, 20, true, $me);
+        $c->add('auto_add_plugins', $_SMAP_DEFAULT['auto_add_plugins'],
                 'select', 0, 0, 3, 20, true, $me);
     }
     return true;

@@ -32,14 +32,15 @@ class sitemap_base
     *   @param  string  $name   Name of driver.
     *   @param  array   $config Driver config from $_SMAP_MAPS
     */
-    public function __construct($name, $config)
+    public function __construct($name)
     {
-        global $_USER;
+        global $_USER, $_SMAP_MAPS;
+
         $this->uid = (int)$_USER['uid'];
         $this->all_langs = false;   // Assume only the user's language
         $this->setHTML();           // Default to HTML sitemap
         $this->name = $name;
-        $this->config = $config;
+        $this->config = $_SMAP_MAPS[$name];
     }
 
 

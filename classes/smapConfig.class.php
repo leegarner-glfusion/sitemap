@@ -186,9 +186,10 @@ class smapConfig
     *   Used to remove un-installed plugins.
     *
     *   @param  mixed   $pi_names   Single name or array of names
+    *   @param  boolean $relaod     True to reorder and reload, False to skip
     *   @return boolean     True on success, False on failure
     */
-    public static function Delete($pi_names)
+    public static function Delete($pi_names, $reload = true)
     {
         global $_TABLES;
 
@@ -206,7 +207,7 @@ class smapConfig
             if (DB_error()) {
                 COM_errorLog("smapConfig::Delete() error: $sql");
                 return false;
-            } else {
+            } elseif ($reload) {
                 self::reOrder();
                 self::loadConfigs();
             }
@@ -220,9 +221,10 @@ class smapConfig
     *   Used to add newly-installed plugins
     *
     *   @param  mixed   $pi_names   Single name or array of names
+    *   @param  boolean $relaod     True to reorder and reload, False to skip
     *   @return boolean     True on success, False on failure
     */
-    public static function Add($pi_names)
+    public static function Add($pi_names, $reload = true)
     {
         global $_TABLES;
 
@@ -240,7 +242,7 @@ class smapConfig
             if (DB_error()) {
                 COM_errorLog("smapConfig::Add() error: $sql");
                 return false;
-            } else {
+            } elseif ($reload) {
                 self::reOrder();
                 self::loadConfigs();
             }
@@ -336,10 +338,8 @@ class smapConfig
     *   First loads all the configured sitemaps where the driver belongs
     *   to an installed plugin, then calls updateConfigs() to scan for
     *   additional plugins with drivers.
-    *
-    *   @param  boolean $del    True to delete configs for disabled plugins
     */
-    public static function loadConfigs($del = false)
+    public static function loadConfigs()
     {
         global $_SMAP_MAPS, $_TABLES, $_PLUGINS;
 
@@ -361,7 +361,7 @@ class smapConfig
 
         // Update configs for missing plugins, and optionally delete removed
         // plugins
-        self::updateConfigs($del);
+        self::updateConfigs();
     }
 
 
@@ -430,32 +430,33 @@ class smapConfig
 
     /**
     *   Clean up sitemap configs by removing uninstalled plugins
-    *   and adding new ones.
+    *   and adding new ones. Calls Add() and Delete() without reordering
+    *   and reloading until the end to avoid unnecessary DB activity.
     *
     *   Updates the $_SMAP_MAPS config table directly; no return value.
-    *
-    *   @param  boolean $del    True to delete maps, False to only add new
     */
-    public static function updateConfigs($del = false)
+    public static function updateConfigs()
     {
         global $_PLUGINS, $_PLUGIN_INFO, $_SMAP_MAPS, $_CONF;
 
         $reload_maps = false;     // Flag to indicate maps need reloading
 
         // Get any enabled plugins that aren't already in the sitemap table
-        // and add them
-        $values = array();
-        foreach ($_PLUGINS as $pi_name) {
-            if (!isset($_SMAP_MAPS[$pi_name])) {
-                // Plugin not in config table, see if there's a driver for it
-                $classfile = self::getClassPath($pi_name);
-                if (is_file($classfile)) {
-                    $values[] = $pi_name;
+        // and add them, if so configured
+        if ($_SMAP_CONF['auto_add_plugins']) {
+            $values = array();
+            foreach ($_PLUGINS as $pi_name) {
+                if (!isset($_SMAP_MAPS[$pi_name])) {
+                    // Plugin not in config table, see if there's a driver for it
+                    if (is_file(self::getClassPath($pi_name))) {
+                        $values[] = $pi_name;
+                    }
                 }
             }
-        }
-        if (!empty($values)) {
-            self::Add($values);
+            if (!empty($values)) {
+                self::Add($values, false);
+                $reload_maps = true;
+            }
         }
 
         // Now clean out entries for removed plugins, if any.
@@ -466,12 +467,20 @@ class smapConfig
         foreach ($_SMAP_MAPS as $pi_name=>$info) {
             if (in_array($pi_name, self::$local)) continue;
             if (!isset($_PLUGIN_INFO[$pi_name]) ||
-                !is_file(self::getClassPath($pi_name)) ) {
+                !is_file(self::getClassPath($pi_name))) {
                 $values[] = $pi_name;
             }
         }
         if (!empty($values)) {
-            self::Delete($values);
+            self::Delete($values, false);
+            $reload_maps = true;
+        }
+
+        // If any updates were done, now reload the configs.
+        // orderby values weren't changed, just added or removed, so no need
+        // to reorder at this point.
+        if ($reload_maps) {
+            self::loadConfigs();
         }
     }
 

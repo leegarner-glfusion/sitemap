@@ -135,6 +135,8 @@ function sitemap_upgrade_2_0_0()
                 'text', 0, 0, 0, 10, true, $_SMAP_CONF['pi_name']);
         $c->add('anon_access', $anon_access,
                 'select', 0, 0, 3, 20, true, $_SMAP_CONF['pi_name']);
+        $c->add('auto_add_plugins', $_SMAP_DEFAULT['auto_add_plugins'],
+                'select', 0, 0, 3, 20, true, $_SMAP_CONF['pi_name']);
     }
     if (!SMAP_do_upgrade_sql('2.0.0')) return false;
 

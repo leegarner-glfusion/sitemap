@@ -450,7 +450,7 @@ function SITEMAP_createGoogleSitemap()
             include_once $classfile;
             $cls = 'sitemap_' . $pi_name;
             if (class_exists($cls)) {
-                $C = new $cls($pi_name, $config);
+                $C = new $cls($pi_name);
                 $C->setXML();   // Mark as an XML sitemap
                 $items = $C->getItems();
             }
