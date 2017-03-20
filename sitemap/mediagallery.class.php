@@ -19,6 +19,7 @@ if (!defined ('GVERSION')) {
 
 class sitemap_mediagallery extends sitemap_base
 {
+    protected $name = 'mediagallery';
 
     /**
     *   Determine if the current user has access to this plugin's sitemap

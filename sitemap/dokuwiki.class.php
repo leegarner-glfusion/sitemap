@@ -39,6 +39,8 @@ if (!defined ('GVERSION')) {
 
 class sitemap_dokuwiki extends sitemap_base
 {
+    protected $name = 'dokuwiki';
+
     /**
     * Returns the location of index.php of each plugin
     */

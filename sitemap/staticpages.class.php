@@ -19,6 +19,7 @@ if (!defined ('GVERSION')) {
 
 class sitemap_staticpages extends sitemap_base
 {
+    protected $name = 'staticpages';
 
     public function getDisplayName()
     {

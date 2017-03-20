@@ -19,6 +19,7 @@ if (!defined ('GVERSION')) {
 
 class sitemap_article extends sitemap_base
 {
+    protected $name = 'article';
 
     public function getName()
     {

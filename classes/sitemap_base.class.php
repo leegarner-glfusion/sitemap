@@ -29,18 +29,25 @@ class sitemap_base
     /**
     *   Constructor. Sets internal values to defaults
     *
-    *   @param  string  $name   Name of driver.
     *   @param  array   $config Driver config from $_SMAP_MAPS
     */
-    public function __construct($name)
+    public function __construct()
     {
         global $_USER, $_SMAP_MAPS;
 
         $this->uid = (int)$_USER['uid'];
         $this->all_langs = false;   // Assume only the user's language
         $this->setHTML();           // Default to HTML sitemap
-        $this->name = $name;
-        $this->config = $_SMAP_MAPS[$name];
+        if (isset($_SMAP_MAPS[$this->name])) {
+            $this->config = $_SMAP_MAPS[$this->name];
+        } else {
+            // No name set by the driver, protect from trying to run
+            // this sitemap.
+            $this->config = array(
+                'html_enabled' => 0,
+                'xml_enabled' => 0,
+            );
+        }
     }
 
 

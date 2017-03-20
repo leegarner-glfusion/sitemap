@@ -20,6 +20,7 @@ if (!defined ('GVERSION')) {
 
 class sitemap_calendar extends sitemap_base
 {
+    protected $name = 'calendar';
 
     /**
     *   Get the friendly display name;

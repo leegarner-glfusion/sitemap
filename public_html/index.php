@@ -244,7 +244,7 @@ foreach ($_SMAP_MAPS as $pi_name=>$pi_config) {
         include_once $classfile;
         $cls = 'sitemap_' . $pi_name;
         if (class_exists($cls)) {
-            $_SMAP_DRIVERS[] = new $cls($pi_name);
+            $_SMAP_DRIVERS[] = new $cls();
         }
     }
 }
