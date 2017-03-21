@@ -200,8 +200,8 @@ USES_sitemap_class_base();
 
 // Retrieves vars
 $selected = 'all';
-if (isset($_POST['type'])) {
-    $selected = COM_applyFilter($_POST['type']);
+if (isset($_GET['type'])) {
+    $selected = COM_applyFilter($_GET['type']);
 }
 
 $T = new Template($_CONF['path'] . 'plugins/sitemap/templates');

@@ -1,5 +1,5 @@
 {# begin {templatelocation} #}
-<form method="post" action="{action_url}">
+<form class="uk-form uk-margin" method="get" action="{action_url}">
   <select name="type" onchange="this.form.submit()">
     <option value="all" {all_sel}>{$LANG_SMAP['all']}</option>
 <!-- BEGIN selectOpts -->
