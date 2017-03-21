@@ -517,12 +517,17 @@ function SMAP_canView()
 {
     global $_CONF, $_SMAP_CONF;
 
-    if ( COM_isAnonUser() &&
-        (!$_SMAP_CONF['anon_access'] || $_CONF['loginrequired']) ) {
-        return false;
-    } else {
-        return true;
+    $retval = NULL;
+
+    if ($retval === NULL) {
+        if ( COM_isAnonUser() &&
+            (!$_SMAP_CONF['anon_access'] || $_CONF['loginrequired']) ) {
+            $retval = false;
+        } else {
+            $retval = true;
+        }
     }
+    return $retval;
 }
 
 
