@@ -2,5 +2,4 @@
 <ul>
 	{items}
 </ul>
-<div align="right"><a href="#PAGE_TOP">[{$LANG_SMAP[back_to_top]}]</a></div>
 {# end {templatelocation} #}
