@@ -106,19 +106,6 @@ function SITEMAP_buildItems(&$driver, $pid)
     $num_items = count($items);
     if ($num_items > 0 && is_array($items)) {
         foreach ($items as $item) {
-            // Static pages
-            /*if ($driver->getName() == 'staticpages') {
-                if (in_array($item['id'], $sp_except)) {
-                    $num_items --;
-                continue;
-                }
-                $temp = $driver->getItemById($item['id']);
-                $raw  = $temp['raw_data'];
-                if ( $raw['sp_centerblock'] == 1 || $raw['sp_search'] != 1) {
-                    $num_items --;
-                    continue;
-                }
-            }*/
             $link = COM_createLink($driver->Escape($item['title']),
                     $item['uri'],
                     array('title'=> $driver->Escape($item['title'])) );
@@ -129,12 +116,9 @@ function SITEMAP_buildItems(&$driver, $pid)
             }
             $T->parse('items', 't_item', true);
         }
-
         $T->parse('item_list', 't_item_list');
-
         $html = $T->finish($T->get_var('item_list'));
     }
-
     return array($num_items, $html);
 }
 
@@ -229,10 +213,8 @@ $T->set_file(array(
     't_item_list'     => 'item_list.thtml',
     't_item'          => 'item.thtml',
 ) );
-$T->set_file('t_category_list','category_list.thtml');
-$T->set_file('t_item_list','item_list.thtml');
 
-// Load up an array containing all the sitemap classes.
+// Load up an array containing all the enabled sitemap classes.
 // Used below to write the sitemap and in the selection creation above.
 // Ensures that only valid driver classfiles are used.
 global $_SMAP_DRIVERS;
@@ -288,11 +270,10 @@ foreach ($_SMAP_DRIVERS as $driver) {
 
 $T->set_var('selector', SITEMAP_getSelectForm($selected));
 $T->parse('output', 't_index');
-$page = $T->finish($T->get_var('output'));
 
 $display = COM_siteHeader()
-         . $page
-         . COM_siteFooter();
+            . $T->finish($T->get_var('output'))
+            . COM_siteFooter();
 
 echo $display;
 
