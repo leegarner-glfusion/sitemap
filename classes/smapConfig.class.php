@@ -487,21 +487,21 @@ class smapConfig
 
     /**
     *   Get the path to a sitemap driver.
-    *   Checks the plugin directory for a class file. If $builtin is true
-    *   then also check for a built-in driver included with this plugin.
+    *   Checks the plugin directory for a class file, then checks the
+    *   bundled ones.
     *
     *   @param  string  $pi_name    Name of plugin
-    *   @param  boolean $builtin    True to include built-in drivers
     *   @return string      Path to driver file, or NULL if not found
     */
-    public static function getClassPath($pi_name, $builtin=true)
+    public static function getClassPath($pi_name)
     {
         global $_CONF, $_SMAP_CONF;
 
-        $dirs = array($pi_name);
-        // If checking the included drivers also, add the sitemap plugin to the
-        // directory list.
-        if ($builtin) $dirs[] = $_SMAP_CONF['pi_name'];
+        // Check first for a plugin-supplied driver, then look for bundled
+        $dirs = array(
+            $pi_name,
+            $_SMAP_CONF['pi_name'],
+        );
 
         foreach ($dirs as $dir) {
             $path = $_CONF['path'] . '/plugins/' . $dir .

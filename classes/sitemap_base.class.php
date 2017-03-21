@@ -196,6 +196,7 @@ class sitemap_base
         );
         return htmlspecialchars($str, ENT_QUOTES);
     }
+
 }
 
 ?>
