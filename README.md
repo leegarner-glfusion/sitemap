@@ -44,10 +44,9 @@ There are currently only three configuration options:
 1. Who can view the online sitemap
   * Determines whether anonymous users can view the HTML sitemap page at
 {site_url}/sitemap/. Has no effect on access to the XML sitemap files.
-  * Options:
-    * All Users (Default)
-    * Logged-In Users Only
-    * No Access (Also disables the plugin menu)
+  * All Users (Default)
+  * Logged-In Users Only
+  * No Access (Also disables the plugin menu)
 1. Automatically add new plugins?
   * If "Yes", then newly-installed plugins which provide a sitemap driver will be added to the sitemaps.
   * Default: Yes
