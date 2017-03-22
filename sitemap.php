@@ -6,9 +6,10 @@
 // |                                                                          |
 // | Plugin Data                                                              |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2009-2015 by the following authors:                        |
+// | Copyright (C) 2009-2017 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
+// | Lee Garner             lee AT leegarner DOT com                          |
 // |                                                                          |
 // | Based on the Site Map Plugin                                             |
 // | Copyright (C) 2007-2008 by the following authors:                        |

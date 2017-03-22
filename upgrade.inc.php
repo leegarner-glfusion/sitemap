@@ -21,7 +21,7 @@ global $_CONF, $_SMAP_CONF, $_ADVT_DEFAULT, $_DB_dbms;
 /** Include the default configuration values */
 require_once dirname(__FILE__) . '/install_defaults.php';
 /** Include the table creation strings */
-require_once dirname(__FILE__) . "/sql/{$_DB_dbms}_install.php";
+require_once dirname(__FILE__) . "/sql/mysql_install.php";
 /** Include the configuration class */
 require_once $_CONF['path_system'] . 'classes/config.class.php';
 

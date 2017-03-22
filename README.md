@@ -3,7 +3,7 @@ Version: 2.0.0
 
 For the latest documentation, please see
 
-	http://www.glfusion.org/wiki/doku.php?id=sitemap:start
+https://www.glfusion.org/wiki/glfusion:plugins:sitemap:start
 
 ## License
 This program is free software; you can redistribute it and/or modify it under
@@ -48,7 +48,7 @@ There are currently only two configuration options>
 
 ## Plugin Integration
 A collection of sitemap drivers for the bundled plugins is included in the
-Sitemap Plugin distribution. 
+Sitemap Plugin distribution.
 
 A plugin may provide it's own driver to be used instead of the default driver
 by including a class file named "plugin_name.class.php"
