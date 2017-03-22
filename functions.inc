@@ -224,73 +224,6 @@ function plugin_getconfigelementhelp_sitemap($option, $doclang='english')
 
 
 /**
-* Loads vars from DB into $_SMAP_CONF[]
-*   @deprecated
-*/
-function SITEMAP_loadConfig()
-{
-    global $_TABLES;
-
-    $conf = array();
-    $sql = "SELECT * FROM {$_TABLES['smap_config']}";
-    $result = DB_query($sql);
-    if (DB_error()) {
-        COM_errorLog('SITEMAP_loadConfig: cannot load config.');
-        exit;
-    }
-
-    while (($A = DB_fetchArray($result)) !== FALSE) {
-        list($name, $value) = $A;
-        if ($value == 'true') {
-            $value = true;
-        } else if ($value == 'false') {
-            $value = false;
-        }
-
-        if ($name == 'date_format') {
-            $value = substr($value, 1, -1);
-        } else if (substr($name, 0, 6) == 'order_') {
-            $value = (int) $value;
-        }
-        $conf[$name] = $value;
-    }
-    return $conf;
-}
-
-/**
-* Saves vars into DB from $_SMAP_CONF[]
-*   @deprecated
-*/
-function SITEMAP_saveConfig() {
-    global $_TABLES, $_SMAP_CONF;
-
-    foreach ($_SMAP_CONF as $name => $value) {
-        if ($value === true) {
-            $value = 'true';
-        } else if ($value === false) {
-            $value = 'false';
-        }
-
-        // To prevent MySQL from trimming trailing spaces
-        if ($name == 'date_format') {
-            $value = '[' . $value . ']';
-        }
-
-        $name  = DB_escapeString($name);
-        $value = DB_escapeString($value);
-
-        $sql = "UPDATE {$_TABLES['smap_config']} "
-             . "SET value = '{$value}' "
-             . "WHERE (name = '{$name}')";
-        $result = DB_query($sql);
-        if (DB_error()) {
-            COM_errorLog('SITEMAP_saveConfig: cannot save config.');
-        }
-    }
-}
-
-
-/**
 * Escapes a string for HTML output
 */
 function SITEMAP_escape($str) {
@@ -314,22 +247,6 @@ function SITEMAP_str($index, $noesc = false) {
     } else {
         COM_errorLog('SITEMAP_str: undefined index "' . $index . '".');
         return '(undefined)';
-    }
-}
-
-/**
-* Strips slashes if magic_quotes_gpc is on
-*   @deprecated
-*/
-function X_SITEMAP_stripslashes($var) {
-    if (get_magic_quotes_gpc()) {
-        if (is_array($var)) {
-            return array_map('SITEMAP_stripslashes', $var);
-        } else {
-            return stripslashes($var);
-        }
-    } else {
-        return $var;
     }
 }
 
