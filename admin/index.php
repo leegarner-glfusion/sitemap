@@ -6,10 +6,9 @@
 // |                                                                          |
 // | Administrative Interface                                                 |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2014-2017 by the following authors:                        |
+// | Copyright (C) 2014-2015 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
-// | Lee Garner             lee AT leegarner DOT com                          |
 // |                                                                          |
 // | Based on the Data Proxy Plugin                                           |
 // | Copyright (C) 2007-2008 by the following authors:                        |
@@ -63,6 +62,8 @@ function SITEMAP_getFreqOptions($selected='')
 {
     global $LANG_SMAP;
 
+    $retval = '';
+
     foreach ($LANG_SMAP['freqs'] as $key=>$text) {
         $sel = $key == $selected ? 'selected="selected"' : '';
         $retval .= '<option value="' . $key . '" ' . $sel . '>' .
@@ -81,6 +82,9 @@ function SITEMAP_getFreqOptions($selected='')
 function SITEMAP_getPriorityOptions($selected='')
 {
     global $_SMAP_CONF;
+
+    $retval = '';
+
     foreach ($_SMAP_CONF['priorities'] as $value) {
         $sel = $value == $selected ? 'selected="selected"' : '';
         $retval .= '<option value="' . $value. '" ' . $sel . '>' .
@@ -159,6 +163,8 @@ function SMAP_adminList()
 {
     global $_CONF, $_TABLES, $LANG_ADMIN, $_SMAP_MAPS, $_SMAP_CONF, $LANG_SMAP;
 
+    $retval = '';
+
     $header_arr = array(
         array(  'text'  => $LANG_SMAP['order'],
                 'field' => 'action',
@@ -188,10 +194,10 @@ function SMAP_adminList()
         ),
     );
     $defsort_arr = array('field' => 'orderby', 'direction' => 'asc');
-    $retval .= ADMIN_listArray('simpleList', SMAP_adminField,
-                $header_arr, $text_arr,
-                $_SMAP_MAPS, $defsort_arr, $filter, $extra,
-                $options_arr, NULL);
+    $retval .= ADMIN_listArray('simpleList', 'SMAP_adminField',
+                $header_arr, '',
+                $_SMAP_MAPS, $defsort_arr, '', '',
+                '', NULL);
 
     $T = new Template($_CONF['path'] . '/plugins/sitemap/templates');
     $T->set_file('update', 'updatemap.thtml');
@@ -221,6 +227,8 @@ USES_sitemap_class_config();
 // Loads Sitemap plugin configuration first of all
 // Also cleans out disabled or deleted plugins
 smapConfig::loadConfigs();
+
+$action = '';
 
 $expected = array(
     'move', 'updatenow',
