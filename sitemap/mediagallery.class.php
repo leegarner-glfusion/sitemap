@@ -32,6 +32,8 @@ class sitemap_mediagallery extends sitemap_base
 
         static $retval = null;
 
+        static $loginRequired;
+
         if (is_null($retval)) {
             $loginrequired = (int)DB_getItem($_TABLES['mg_config'], 'config_value',
                         "config_name = 'loginrequired'");
