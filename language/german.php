@@ -135,7 +135,7 @@ $LANG_configsections['sitemap'] = array(
 $LANG_confignames['sitemap'] = array(
     'xml_filenames' => 'Sitemap filename(s)',
     'anon_access' => 'Allow access by anonymous users?',
-    'auto_add_pluigns' => 'Automatically add new plugins?',
+    'auto_add_plugins' => 'Automatically add new plugins?',
 );
 $LANG_configsubgroups['sitemap'] = array(
     'sg_main' => 'Main Settings',
