@@ -83,15 +83,12 @@ function USES_sitemap_class_base()
 */
 function plugin_getmenuitems_sitemap()
 {
-    global $_CONF, $_TABLES, $_SMAP_CONF;
+    global $_CONF;
 
     if (SMAP_canView() ) {
-        $active = DB_count($_TABLES['smap_maps'],'html_enabled',1);
-        if ( $active > 0 ) {
-            return array(
-                SITEMAP_str('menu_label') => $_CONF['site_url'] . '/sitemap/index.php',
-            );
-        }
+        return array(
+            SITEMAP_str('menu_label') => $_CONF['site_url'] . '/sitemap/index.php',
+        );
     }
     return array();
 }
@@ -436,16 +433,33 @@ function SMAP_toggleEnabled($pi_name, $fld, $oldval)
 */
 function SMAP_canView()
 {
-    global $_CONF, $_SMAP_CONF;
-
-    $retval = NULL;
+    global $_CONF, $_SMAP_CONF, $_TABLES;
+    static $retval = NULL;
 
     if ($retval === NULL) {
-        if ( COM_isAnonUser() &&
-            (!$_SMAP_CONF['anon_access'] || $_CONF['loginrequired']) ) {
+        $retval = true;
+        switch ($_SMAP_CONF['view_access']) {
+        case 0:     // No user access to the URL
             $retval = false;
-        } else {
-            $retval = true;
+            break;
+        case 1:     // Logged-in users only
+            if (COM_isAnonUser()) {
+                $retval  = false;
+            }
+            break;
+        case 2:     // All users allowed, but check for loginrequred
+        default:
+            if ( COM_isAnonUser() && $_CONF['loginrequired'] ) {
+                $retval = false;
+            }
+        }
+
+        if ($retval === true) {
+            // If the guest has access, check if there are any items to show
+            $active = DB_count($_TABLES['smap_maps'],'html_enabled',1);
+            if ($active < 1) {
+                $retval = false;
+            }
         }
     }
     return $retval;

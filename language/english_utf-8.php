@@ -133,7 +133,7 @@ $LANG_configsections['sitemap'] = array(
 
 $LANG_confignames['sitemap'] = array(
     'xml_filenames' => 'Sitemap filename(s)',
-    'anon_access' => 'Allow access by anonymous users?',
+    'view_access' => 'Users who can view the sitemap',
     'auto_add_plugins' => 'Automatically add new plugins?',
 );
 $LANG_configsubgroups['sitemap'] = array(
@@ -149,6 +149,7 @@ $LANG_configselects['sitemap'] = array(
     0 => array('True' => 1, 'False' => 0),
     1 => array('True' => TRUE, 'False' => FALSE),
     3 => array('Yes' => 1, 'No' => 0),
+    4 => array('No Access' => 0, 'Logged-In Only' => 1, 'All Users' => 2),
 );
  
 ?>

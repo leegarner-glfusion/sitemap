@@ -124,7 +124,7 @@ function sitemap_upgrade_2_0_0()
     COM_errorLog('Updating the sitemap plugin to version 2.0.0');
     $conf = _SITEMAP_loadConfig();
     $xml_filenames = $conf['google_sitemap_name'];
-    $anon_access = $conf['anon_access'] ? 1 : 0;
+    $view_access = $conf['anon_access'] ? 2 : 1;
 
     // Add new configuration items
     $c = config::get_instance();
@@ -133,8 +133,8 @@ function sitemap_upgrade_2_0_0()
         $c->add('fs_main', NULL, 'fieldset', 0, 0, NULL, 0, true, $_SMAP_CONF['pi_name']);
         $c->add('xml_filenames', $xml_filenames,
                 'text', 0, 0, 0, 10, true, $_SMAP_CONF['pi_name']);
-        $c->add('anon_access', $anon_access,
-                'select', 0, 0, 3, 20, true, $_SMAP_CONF['pi_name']);
+        $c->add('view_access', $view_access,
+                'select', 0, 0, 4, 20, true, $_SMAP_CONF['pi_name']);
         $c->add('auto_add_plugins', $_SMAP_DEFAULT['auto_add_plugins'],
                 'select', 0, 0, 3, 30, true, $_SMAP_CONF['pi_name']);
     }
