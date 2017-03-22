@@ -6,9 +6,10 @@
 // |                                                                          |
 // | Administrative Interface                                                 |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2014-2015 by the following authors:                        |
+// | Copyright (C) 2014-2017 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
+// | Lee Garner             lee AT leegarner DOT com                          |
 // |                                                                          |
 // | Based on the Data Proxy Plugin                                           |
 // | Copyright (C) 2007-2008 by the following authors:                        |
@@ -187,7 +188,7 @@ function SMAP_adminList()
         ),
     );
     $defsort_arr = array('field' => 'orderby', 'direction' => 'asc');
-    $retval .= ADMIN_listArray('simpleList', SMAP_adminField, 
+    $retval .= ADMIN_listArray('simpleList', SMAP_adminField,
                 $header_arr, $text_arr,
                 $_SMAP_MAPS, $defsort_arr, $filter, $extra,
                 $options_arr, NULL);
