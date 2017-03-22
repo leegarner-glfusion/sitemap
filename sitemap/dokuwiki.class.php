@@ -135,7 +135,23 @@ class sitemap_dokuwiki extends sitemap_base
 
         $pages = array();
         $ns  = utf8_encodeFN(str_replace(':','/',$category));
-        search($pages,$conf['datadir'],'search_index',array('ns' => $ns));
+
+        switch ($this->smap_type ) {
+            case 'xml' :
+                $opts = array(
+                    'pagesonly' => true,
+                    'listdirs' => true,
+                    'listfiles' => true,
+                    'sneakyacl' => $conf['sneaky_index'],
+                    // Hacky, should rather use recmatch
+                    'depth' => 0
+                );
+                search($pages,$conf['datadir'],'search_universal',$opts);
+                break;
+            default :
+                search($pages,$conf['datadir'],'search_index',array('ns' => $ns));
+                break;
+        }
 
         $entries = array();
         foreach ( $pages AS $page ) {
