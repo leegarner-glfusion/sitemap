@@ -63,7 +63,7 @@ function plugin_initconfig_sitemap()
         $c->add('anon_access', $_SMAP_DEFAULT['anon_access'],
                 'select', 0, 0, 3, 20, true, $me);
         $c->add('auto_add_plugins', $_SMAP_DEFAULT['auto_add_plugins'],
-                'select', 0, 0, 3, 20, true, $me);
+                'select', 0, 0, 3, 30, true, $me);
     }
     return true;
 }
