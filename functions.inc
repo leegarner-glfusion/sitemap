@@ -6,9 +6,10 @@
 // |                                                                          |
 // | glFusion Plugin API functions and support functions                      |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2009-2015 by the following authors:                        |
+// | Copyright (C) 2009-2017 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
+// | Lee Garner             lee AT leegarner DOT com                          |
 // |                                                                          |
 // | Based on the Site Map Plugin                                             |
 // | Copyright (C) 2007-2008 by the following authors:                        |
@@ -82,15 +83,17 @@ function USES_sitemap_class_base()
 */
 function plugin_getmenuitems_sitemap()
 {
-    global $_CONF, $_SMAP_CONF;
+    global $_CONF, $_TABLES, $_SMAP_CONF;
 
-    if (SMAP_canView()) {
-        return array(
-            SITEMAP_str('menu_label') => $_CONF['site_url'] . '/sitemap/index.php',
-        );
-    } else {
-        return array();
+    if (SMAP_canView() ) {
+        $active = DB_count($_TABLES['smap_maps'],'html_enabled',1);
+        if ( $active > 0 ) {
+            return array(
+                SITEMAP_str('menu_label') => $_CONF['site_url'] . '/sitemap/index.php',
+            );
+        }
     }
+    return array();
 }
 
 
@@ -210,7 +213,7 @@ function plugin_getconfigelementhelp_sitemap($option, $doclang='english')
 
     $doc_path = $_CONF['path_html'] . $_SMAP_CONF['pi_name'] .
                 "/docs/$doclang/config.html";
-    if (!is_file($doc_path . $file)) {
+    if (!is_file($doc_path )) {
         $doclang = 'english';
     }
     $doc_url = $_CONF['site_url'] . '/' . $_SMAP_CONF['pi_name'] .
@@ -421,6 +424,7 @@ function SMAP_toggleEnabled($pi_name, $fld, $oldval)
     DB_change($_TABLES['smap_maps'],
                 $fld . '_enabled', $newval,
                 'pi_name', DB_escapeString($pi_name));
+    CACHE_remove_instance('menu');
     return DB_error() ? $oldval : $newval;
 }
 
