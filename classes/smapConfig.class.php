@@ -208,7 +208,6 @@ class smapConfig
                 COM_errorLog("smapConfig::Delete() error: $sql");
                 return false;
             } elseif ($reload) {
-                self::reOrder();
                 self::loadConfigs();
             }
         }
@@ -242,9 +241,11 @@ class smapConfig
             if (DB_error()) {
                 COM_errorLog("smapConfig::Add() error: $sql");
                 return false;
-            } elseif ($reload) {
+            } else {
                 self::reOrder();
-                self::loadConfigs();
+                if ($reload) {
+                    self::loadConfigs();
+                }
             }
         }
         return true;
@@ -454,7 +455,7 @@ class smapConfig
                 }
             }
             if (!empty($values)) {
-                self::Add($values, false);
+                self::Add($values);
                 $reload_maps = true;
             }
         }
