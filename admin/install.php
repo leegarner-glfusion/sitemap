@@ -33,19 +33,17 @@
 // +--------------------------------------------------------------------------+
 
 require_once '../../../lib-common.php';
-require_once $_CONF['path'].'/plugins/sitemap/autoinstall.php';
-
-USES_lib_install();
 
 if (!SEC_inGroup('Root')) {
     // Someone is trying to illegally access this page
     COM_errorLog("Someone has tried to access the Site Map install/uninstall page without proper permissions.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: $REMOTE_ADDR",1);
-    $display = COM_siteHeader ('menu', $LANG_ACCESS['accessdenied'])
-             . COM_startBlock ($LANG_ACCESS['accessdenied'])
-             . $LANG_ACCESS['plugin_access_denied_msg']
-             . COM_endBlock ()
-             . COM_siteFooter ();
-    echo $display;
+    COM_404();
+    exit;
+}
+
+if (!SEC_checkToken()) {
+    COM_errorLog("Sitemap Installation: Security Token Check failed");
+    COM_404();
     exit;
 }
 
@@ -53,30 +51,34 @@ if (!SEC_inGroup('Root')) {
 * Main Function
 */
 
-if (SEC_checkToken()) {
-    $action = COM_applyFilter($_GET['action']);
-    if ($action == 'install') {
-        if (plugin_install_sitemap()) {
-    		// Redirects to the plugin editor
-    		echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=44');
-    		exit;
-        } else {
-    		echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=72');
-    		exit;
-        }
-    } else if ($action == 'uninstall') {
-    	if (plugin_uninstall_sitemap('installed')) {
-    		/**
-    		* Redirects to the plugin editor
-    		*/
-    		echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=45');
-    		exit;
-    	} else {
-    		echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=73');
-    		exit;
-    	}
+require_once $_CONF['path'].'/plugins/sitemap/autoinstall.php';
+
+USES_lib_install();
+
+
+$action = COM_applyFilter($_GET['action']);
+switch ($action) {
+case 'install':
+    if (plugin_install_sitemap()) {
+        // Redirects to the plugin editor
+        echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=44');
+        exit;
+    } else {
+        echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=72');
+        exit;
     }
+case 'uninstall':
+    if (plugin_uninstall_sitemap('installed')) {
+        // Redirects to the plugin editor
+        echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=45');
+        exit;
+    } else {
+        echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php?msg=73');
+        exit;
+    }
+default:
+    echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php');
+    break;
 }
 
-echo COM_refresh($_CONF['site_admin_url'] . '/plugins.php');
 ?>

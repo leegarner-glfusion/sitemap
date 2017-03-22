@@ -1,16 +1,16 @@
 <?php
 // +--------------------------------------------------------------------------+
-// | Site Map Plugin for glFusion                                             |
+// | Data Proxy Plugin for glFusion                                           |
 // +--------------------------------------------------------------------------+
-// | sitemap.php                                                              |
+// | polls.class.php                                                          |
 // |                                                                          |
-// | Plugin Data                                                              |
+// | Polls Plugin interface                                                   |
 // +--------------------------------------------------------------------------+
 // | Copyright (C) 2009-2015 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
 // |                                                                          |
-// | Based on the Site Map Plugin                                             |
+// | Based on the Data Proxy Plugin                                           |
 // | Copyright (C) 2007-2008 by the following authors:                        |
 // |                                                                          |
 // | Authors: mystral-kk        - geeklog AT mystral-kk DOT net               |
@@ -37,26 +37,57 @@ if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
 
-global $_DB_table_prefix, $_TABLES;
+class sitemap_polls extends sitemap_base
+{
+    protected $name = 'polls';
 
-// set Plugin Table Prefix the Same as glFusion
+    public function getDisplayName()
+    {
+        global $LANG_POLLS;
+        return $LANG_POLLS['polls'];
+    }
 
-$_SMAP_table_prefix = $_DB_table_prefix;
 
-// Add to $_TABLES array the tables your plugin uses
+    /**
+    * Returns an array of (
+    *   'id'        => $id (string),
+    *   'title'     => $title (string),
+    *   'uri'       => $uri (string),
+    *   'date'      => $date (int: Unix timestamp),
+    *   'image_uri' => $image_uri (string)
+    * )
+    */
+    public function getItems($category = 0)
+    {
+        global $_CONF, $_TABLES;
 
-$_TABLES['smap_config'] = $_SMAP_table_prefix . 'smap_config';
-$_TABLES['smap_maps'] = $_SMAP_table_prefix . 'smap_maps';
+        $entries = array();
 
-// Plugin info
-$_SMAP_CONF['pi_name']          = 'sitemap';
-$_SMAP_CONF['pi_display_name']  = 'SiteMap';
-$_SMAP_CONF['pi_version']       = '2.0.0';
-$_SMAP_CONF['gl_version']       = '1.6.0';
-$_SMAP_CONF['pi_url']           = 'https://www.glfusion.org/';
+        $sql = "SELECT pid, topic, UNIX_TIMESTAMP(date) AS day
+                FROM {$_TABLES['polltopics']} ";
+        if ($this->uid > 0) {
+            $sql .= COM_getPermSQL('WHERE', $this->uid);
+        }
+        $sql .= ' ORDER BY pid';
+        $result = DB_query($sql, 1);
+        if (DB_error()) {
+            COM_errorLog("sitemap_polls::getItems error: $sql");
+            return $entries;
+        }
 
-$_SMAP_CONF['priorities'] = array(
-    '1.0', '0.9', '0.8', '0.7', '0.6', '0.5', '0.4', '0.3', '0.2', '0.1', '0.0'
-);
+        while (($A = DB_fetchArray($result, false)) !== FALSE) {
+            $entries[] = array(
+                'id'        => $A['pid'],
+                'title'     => $A['topic'],
+                'uri'       => $_CONF['site_url'] . '/polls/index.php?pid='
+                                . urlencode($A['pid']),
+                'date'      => $A['day'],
+                'image_uri' => false,
+            );
+        }
+        return $entries;
+    }
+
+}
 
 ?>

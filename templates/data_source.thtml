@@ -1,3 +1,11 @@
-<h3>{lang_data_source}({num_items})</h3>
-{category_list}
-<hr{xhtml}>
+{# begin {templatelocation} #}
+<div class="uk-panel uk-margin">
+  <div class="uk-sticky-placeholder">
+    <div class="uk-panel uk-panel-box" data-uk-sticky="{boundry:true}">
+      <span class="uk-text-bold">{lang_data_source}&nbsp;&nbsp;({num_items})</span>
+      <span class="uk-align-right"><a href="#PAGE_TOP" data-uk-smooth-scroll>[{$LANG_SMAP[back_to_top]}]</a></span>
+    </div>
+  </div>
+  {category_list}
+</div>
+{# end {templatelocation} #}
