@@ -428,6 +428,7 @@ function SMAP_toggleEnabled($pi_name, $fld, $oldval)
 
 /**
 *   Check whether a visitor has access to view the online sitemap
+*   Also will return false if there are no sitemaps enabled.
 *
 *   @return boolean     True if access is allowed, False if not
 */
