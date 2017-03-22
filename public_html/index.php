@@ -91,7 +91,7 @@ function SITEMAP_getSelectForm($selected = 'all')
 */
 function SITEMAP_buildItems(&$driver, $pid)
 {
-    global $_SMAP_CONF, $T;
+    global $_CONF, $_SMAP_CONF, $T;
 
     $html = '';
 
@@ -111,7 +111,7 @@ function SITEMAP_buildItems(&$driver, $pid)
                     array('title'=> $driver->Escape($item['title'])) );
             $T->set_var('item', $link);
             if ($item['date'] !== false) {
-                $date = date($_SMAP_CONF['date_format'], $item['date']);
+                $date = date($_CONF['shortdate'], $item['date']);
                 $T->set_var('date', $date);
             }
             $T->parse('items', 't_item', true);
