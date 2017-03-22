@@ -130,10 +130,14 @@ function plugin_autouninstall_sitemap()
 */
 function plugin_postinstall_sitemap()
 {
+    global $_SMAP_CONF, $_SMAP_MAPS;
     require_once dirname(__FILE__) . '/classes/smapConfig.class.php';
 
-    // Add the local sitemaps (articles, trackbacks, etc.)
-    smapConfig::Add(smapConfig::$local);
+    // Add the current plugins.
+    // Configs haven't been loaded at this point, so fake them.
+    $_SMAP_MAPS = array();
+    $_SMAP_CONF['auto_add_plugins'] = 1;
+    smapConfig::updateConfigs();
 }
 
 
