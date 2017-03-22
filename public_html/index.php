@@ -39,6 +39,13 @@ if (!in_array('sitemap', $_PLUGINS) || !SMAP_canView()) {
     exit;
 }
 
+$active = DB_count($_TABLES['smap_maps'],'html_enabled',1);
+if ( $active == 0 ) {
+    COM_404();
+    exit;
+}
+
+
 // Loads config
 USES_sitemap_class_config();
 smapConfig::loadConfigs();
