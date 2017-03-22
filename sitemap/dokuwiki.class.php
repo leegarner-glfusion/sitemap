@@ -62,49 +62,34 @@ class sitemap_dokuwiki extends sitemap_base
         return $LANG_DW00['menulabel'];
     }
 
-
     public function getChildCategories($pid = false)
     {
-        global $conf;
-        global $QUERY;
-        global $ID;
-        global $LANG_DW00;
-        global $_CONF;
-        global $_DW_CONF;
-        global $_USER;
+        global $conf, $LANG_DW00,$_CONF,$_DW_CONF, $_USER;
 
-        require_once (DOKU_INC.'inc/init.php');
-        require_once (DOKU_INC.'inc/common.php');
-        require_once (DOKU_INC.'inc/events.php');
-        require_once (DOKU_INC.'inc/pageutils.php');
-        require_once (DOKU_INC.'inc/html.php');
-        require_once (DOKU_INC.'inc/auth.php');
-        require_once (DOKU_INC.'inc/actions.php');
-        require_once(DOKU_INC.'inc/indexer.php');
-        require_once ($_CONF['path_html'] . $_DW_CONF['public_dir'] . 'inc/search.php');
-        require_once ($_CONF['path_html'] . $_DW_CONF['public_dir'] . 'inc/fulltext.php');
+        require_once DOKU_INC.'inc/init.php';
 
         $dir = $conf['datadir'];
+        if ( $pid == false ) $pid = '';
         $ns  = cleanID($pid);
-        if(empty($ns)){
-            $ns = dirname(str_replace(':','/',$ID));
-            if($ns == '.') $ns ='';
-        }
-        $ns  = utf8_encodeFN(str_replace(':','/',$ns));
+
         $data = array();
+        $origns = $ns;
+
+        $ns  = utf8_encodeFN(str_replace(':','/',$ns));
+
         search($data,$conf['datadir'],'search_index',array('ns' => $ns));
+
         $entries = array();
-        foreach ($data as $item) {
-            if ( $item['type'] == 'd') {
-                if ( !empty($ns) && strstr($item['id'],$ns) == false ) {
-                    continue;
-                }
-                if ( !empty($ns) && $ns == $item['id'] ) {
+
+        foreach( $data AS $item) {
+            if ( ((($origns == "" ) || ($item['type'] == 'd' && strstr($item['id'],$origns) !== false) )) && $origns != $item['id'] ) {
+                if (auth_aclcheck($item['id'],'',array()) < AUTH_READ) {
                     continue;
                 }
                 $entry = array();
                 $entry['id'] = $item['id'];
                 $entry['pid'] = $pid;
+
                 $entry['title'] = p_get_metadata($item['id'], 'title');
                 if ( empty($entry['title']) ) $entry['title'] = $item['id'];
                 switch ($conf['userewrite']) {
@@ -113,18 +98,17 @@ class sitemap_dokuwiki extends sitemap_base
                         break;
                     case 0: // URL rewrite - off
                         $entry['uri'] = $_CONF['site_url'] . $_DW_CONF['public_dir']
-                                      . 'doku.php?id=' . $entry['id'];
+                        . 'doku.php?id=' . $entry['id'];
                         break;
                     case 2: // URL rewrite - internal
                         $entry['uri'] = $_CONF['site_url'] . $_DW_CONF['public_dir']
-                                      . 'doku.php/' . $entry['id'];
+                        . 'doku.php/' . $entry['id'];
                         break;
                     default:
-                        break;
+                        continue;
                 }
                 $entry['date']      = false;
                 $entry['image_uri'] = false;
-
                 $entries[] = $entry;
             }
         }
@@ -143,93 +127,63 @@ class sitemap_dokuwiki extends sitemap_base
     */
     public function getItems($category = false)
     {
-        global $conf;
-        global $QUERY;
-        global $ID;
-        global $LANG_DW00;
-        global $_CONF;
-        global $_DW_CONF;
-        global $_USER;
+        global $conf, $LANG_DW00,$_CONF,$_DW_CONF, $_USER;
 
         require_once (DOKU_INC.'inc/init.php');
-        require_once (DOKU_INC.'inc/common.php');
-        require_once (DOKU_INC.'inc/events.php');
-        require_once (DOKU_INC.'inc/pageutils.php');
-        require_once (DOKU_INC.'inc/html.php');
-        require_once (DOKU_INC.'inc/auth.php');
-        require_once (DOKU_INC.'inc/actions.php');
-        require_once(DOKU_INC.'inc/indexer.php');
-        require_once ($_CONF['path_html'] . $_DW_CONF['public_dir'] . 'inc/search.php');
-        require_once ($_CONF['path_html'] . $_DW_CONF['public_dir'] . 'inc/fulltext.php');
 
         $dir = $conf['datadir'];
-        $ns = $category;
-        #fixme use appropriate function
-        if(empty($ns)){
-            $ns = dirname(str_replace(':',DIRECTORY_SEPARATOR,$ID));
-            if($ns == '.') $ns ='';
-        }
-        $ns  = utf8_encodeFN(str_replace(':',DIRECTORY_SEPARATOR,$ns));
 
-        $data = array();
-        search($data,$conf['datadir'],'search_index',array('ns' => $ns));
-
-        $base_path = $_CONF['path_html'] . substr($_DW_CONF['public_dir'], 1);
-        $data_path = realpath($base_path . $conf['savedir'] . '/pages');
-        if ($data_path === false) {
-            COM_errorLog("Dataproxy: can't find DokuWiki's data directory.");
-            return $retval;
-        }
+        $pages = array();
+        $ns  = utf8_encodeFN(str_replace(':','/',$category));
+        search($pages,$conf['datadir'],'search_index',array('ns' => $ns));
 
         $entries = array();
-        foreach($data AS $item) {
-            if ( $item['type'] == 'f' ) {
+        foreach ( $pages AS $page ) {
+            $id = $page['id'];
 
-                if ( !empty($category) && strstr($item['id'],$category) == false ) {
-                    continue;
-                }
-                if ( !empty($category) && $category == $item['id'] ) {
-                    continue;
-                }
-                $entry = array();
-                $entry['id']    = $item['id'];
-                $entry['title'] = p_get_metadata($item['id'], 'title');
-                if ( empty($entry['title'])) {
-                    if ( substr($entry['id'],0,strlen($category)) == $category) {
-                        $entry['title'] = substr($entry['id'],strlen($category)+1);
-                    } else {
-                        $entry['title'] = urldecode($entry['id']);
-                    }
-                }
-                switch ($conf['userewrite']) {
-                    case 1: // URL rewrite - .htaccess
-                        $entry['uri'] = $_CONF['site_url'].$_DW_CONF['public_dir'].$entry['id'];
-                        break;
+            if ( $id == $category ) continue;
+            if ( $page['type'] == 'd' ) continue;
 
-                    case 0: // URL rewrite - off
-                        $entry['uri'] = $_CONF['site_url'] . $_DW_CONF['public_dir']
-                                      . 'doku.php?id=' . $entry['id'];
-                        break;
-
-                    case 2: // URL rewrite - internal
-                        $entry['uri'] = $_CONF['site_url'] . $_DW_CONF['public_dir']
-                                      . 'doku.php/' . $entry['id'];
-                        break;
-
-                    default:
-                        break;
-                }
-                if ( substr($entry['id'],0,strlen($category)) == $category) {
-                    $fileid = $ns . DIRECTORY_SEPARATOR. substr($entry['id'],strlen($category)+1);
-                } else {
-                    $fileid = urldecode($entry['id']);
-                }
-                $full_path = $data_path . DIRECTORY_SEPARATOR . $fileid . '.txt';
-                $entry['date']      = @filemtime($full_path);
-                $entry['image_uri'] = false;
-
-                $entries[] = $entry;
+            if ( $category != false && stristr($id,$category) === false ) {
+                continue;
             }
+            //skip hidden, non existing and restricted files
+            if (isHiddenPage($id)) {
+                continue;
+            }
+            if (auth_aclcheck($id,'',array()) < AUTH_READ) {
+                continue;
+            }
+            $id = trim($id);
+            $date = @filemtime(wikiFN($id));
+            if (!$date) {
+                continue;
+            }
+
+            $entry = array();
+            $entry['id']    = $id;
+            $entry['title'] = p_get_metadata($id, 'title');
+            if ( $entry['title'] == '' ) $entry['title'] = $id;
+            $entry['date'] = $date;
+            switch ($conf['userewrite']) {
+                case 1: // URL rewrite - .htaccess
+                    $entry['uri'] = $_CONF['site_url'].$_DW_CONF['public_dir'].$entry['id'];
+                    break;
+
+                case 0: // URL rewrite - off
+                    $entry['uri'] = $_CONF['site_url'] . $_DW_CONF['public_dir']
+                    . 'doku.php?id=' . $entry['id'];
+                    break;
+
+                case 2: // URL rewrite - internal
+                    $entry['uri'] = $_CONF['site_url'] . $_DW_CONF['public_dir']
+                    . 'doku.php/' . $entry['id'];
+                    break;
+
+                default:
+                    break;
+            }
+            $entries[] = $entry;
         }
         return $entries;
     }
