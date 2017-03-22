@@ -120,9 +120,9 @@ function SMAP_do_set_version($ver)
 function sitemap_upgrade_2_0_0()
 {
     global $_SMAP_CONF, $_SMAP_DEFAULT, $_PLUGINS;
-
+    require_once dirname(__FILE__) . '/classes/smapConfig.class.php';
     COM_errorLog('Updating the sitemap plugin to version 2.0.0');
-    $conf = SITEMAP_loadConfig();
+    $conf = _SITEMAP_loadConfig();
     $xml_filenames = $conf['google_sitemap_name'];
     $anon_access = $conf['anon_access'] ? 1 : 0;
 
@@ -181,8 +181,45 @@ function sitemap_upgrade_2_0_0()
         ));
     }
     // clean up configs for added and removed plugins
-    smapConfig::cleanConfigs();
+    smapConfig::updateConfigs();
     return SMAP_do_set_version('2.0.0') || false;
 }
+
+/**
+* Loads vars from DB into $_SMAP_CONF[]
+*/
+function _SITEMAP_loadConfig() {
+	global $_TABLES;
+
+    $conf = array();
+
+    if ( !DB_checkTableExists($_TABLES['smap_config']) ) return $conf;
+
+	$sql = "SELECT * FROM {$_TABLES['smap_config']}";
+	$result = DB_query($sql);
+	if (DB_error()) {
+		COM_errorLog('SITEMAP_loadConfig: cannot load config.');
+		exit;
+	}
+
+	while (($A = DB_fetchArray($result)) !== FALSE) {
+		list($name, $value) = $A;
+		if ($value == 'true') {
+			$value = true;
+		} else if ($value == 'false') {
+			$value = false;
+		}
+
+		if ($name == 'date_format') {
+			$value = substr($value, 1, -1);
+		} else if (substr($name, 0, 6) == 'order_') {
+			$value = (int) $value;
+		}
+
+		$conf[$name] = $value;
+	}
+	return $conf;
+}
+
 
 ?>
