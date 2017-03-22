@@ -33,9 +33,9 @@ $_SMAP_DEFAULT['xml_filenames'] = 'sitemap.xml;mobile.xml';
 /**
 *   Can anonymous users view the sitemap?
 *   Only applies to the /sitemap url, everyone can see the sitemap files
-*   1 = Yes, 0 = No
+*   0 = No Access, 1 = Logged-In Only, 2 = All Users
 */
-$_SMAP_DEFAULT['anon_access'] = 1;
+$_SMAP_DEFAULT['view_access'] = 2;
 
 /**
 *   Automatically add new plugins as they're installed?
@@ -60,8 +60,8 @@ function plugin_initconfig_sitemap()
         $c->add('fs_main', NULL, 'fieldset', 0, 0, NULL, 0, true, $me);
         $c->add('xml_filenames', $_SMAP_DEFAULT['xml_filenames'],
                 'text', 0, 0, 0, 10, true, $me);
-        $c->add('anon_access', $_SMAP_DEFAULT['anon_access'],
-                'select', 0, 0, 3, 20, true, $me);
+        $c->add('view_access', $_SMAP_DEFAULT['view_access'],
+                'select', 0, 0, 4, 20, true, $me);
         $c->add('auto_add_plugins', $_SMAP_DEFAULT['auto_add_plugins'],
                 'select', 0, 0, 3, 30, true, $me);
     }
