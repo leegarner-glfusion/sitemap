@@ -188,7 +188,7 @@ function plugin_upgrade_sitemap()
  *
  *  @return array   List of paths to Javascript files
  */
-function plugin_getheaderjs_sitemap()
+/*function plugin_getheaderjs_sitemap()
 {
     $path = dirname(__FILE__) . '/js';
     $files = array(
@@ -196,7 +196,7 @@ function plugin_getheaderjs_sitemap()
     );
     return $files;
 }
-
+*/
 
 /**
 *   Get the URL to the configuration help file
@@ -400,29 +400,6 @@ function SITEMAP_createGoogleSitemap()
         $retval = ($retval || !SITEMAP_write($filename, $sitemap));
     }
     return !$retval;
-}
-
-
-/**
-*   Update the 'enabled' value for a sitemap.
-*   Called from the admin ajax.php script.
-*
-*  @param  integer $oldval  Current value
-*  @param  string  $fld     Field, smap or gsmap
-*  @return integer     New value, or old value if an error occurred
-*/
-function SMAP_toggleEnabled($pi_name, $fld, $oldval)
-{
-    global $_TABLES;
-
-    // Sanitize and set values
-    $oldval = $oldval == 1 ? 1 : 0;
-    $newval = $oldval == 0 ? 1 : 0;
-    DB_change($_TABLES['smap_maps'],
-                $fld . '_enabled', $newval,
-                'pi_name', DB_escapeString($pi_name));
-    CACHE_remove_instance('menu');
-    return DB_error() ? $oldval : $newval;
 }
 
 

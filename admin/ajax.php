@@ -22,14 +22,14 @@ if (!in_array('sitemap', $_PLUGINS) ||
     exit;
 }
 
+USES_sitemap_class_config();
+
 switch ($_POST['action']) {
 case 'toggleEnabled':
-    $oldval = $_REQUEST['oldval'] == 1 ? 1 : 0;
-
     switch ($_POST['type']) {
     case 'html':
     case 'xml':
-        $newval = SMAP_toggleEnabled($_POST['id'], $_POST['type'], $oldval);
+        $newval = smapConfig::toggleEnabled($_POST['id'], $_POST['type'], $_POST['oldval']);
         $newval_txt = $newval == 1 ? $LANG_SMAP['enabled'] : $LANG_SMAP['disabled'];
         break;
 
@@ -46,7 +46,6 @@ case 'toggleEnabled':
     break;
 
 case 'updatefreq':
-    USES_sitemap_class_config();
     $M = new smapConfig($_POST['id']);
     $newfreq = $M->updateFreq($_POST['newfreq']);
     $result = array(
@@ -58,7 +57,6 @@ case 'updatefreq':
     break;
 
 case 'updatepriority':
-    USES_sitemap_class_config();
     $M = new smapConfig($_POST['id']);
     $newpriority = $M->updatePriority($_POST['newpriority']);
     $result = array(
