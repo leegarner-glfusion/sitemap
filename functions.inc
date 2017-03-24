@@ -188,7 +188,7 @@ function plugin_upgrade_sitemap()
  *
  *  @return array   List of paths to Javascript files
  */
-function plugin_getheaderjs_sitemap()
+/*function plugin_getheaderjs_sitemap()
 {
     $path = dirname(__FILE__) . '/js';
     $files = array(
@@ -196,7 +196,7 @@ function plugin_getheaderjs_sitemap()
     );
     return $files;
 }
-
+*/
 
 /**
 *   Get the URL to the configuration help file
