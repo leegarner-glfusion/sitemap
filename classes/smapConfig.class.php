@@ -355,7 +355,7 @@ class smapConfig
 
         // Only load configs for enabled plugins
         while ($A = DB_fetchArray($result, false)) {
-            if (in_array($A['pi_name'], $_PLUGINS)) {
+            if (in_array($A['pi_name'], $_PLUGINS) || in_array($A['pi_name'], self::$local)) {
                 $_SMAP_MAPS[$A['pi_name']] = $A;
             }
         }
@@ -466,9 +466,10 @@ class smapConfig
         // which a driver can't be found.
         $values = array();
         foreach ($_SMAP_MAPS as $pi_name=>$info) {
-            if (in_array($pi_name, self::$local)) continue;
-            if (!isset($_PLUGIN_INFO[$pi_name]) ||
-                !is_file(self::getClassPath($pi_name))) {
+            if (in_array($pi_name, self::$local)) {
+                continue;
+            }
+            if (!isset($_PLUGIN_INFO[$pi_name]) || !is_file(self::getClassPath($pi_name))) {
                 $values[] = $pi_name;
             }
         }
