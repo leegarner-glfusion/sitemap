@@ -472,11 +472,14 @@ class smapConfig
         // Get any enabled plugins that aren't already in the sitemap table
         // and add them, if so configured
         if ($_SMAP_CONF['auto_add_plugins']) {
+            // Get all enabled plugins, plus check local maps
+            $plugins = array_merge($_PLUGINS, self::$local);
             $values = array();
-            foreach ($_PLUGINS as $pi_name) {
+            foreach ($plugins as $pi_name) {
                 if (!isset($_SMAP_MAPS[$pi_name])) {
                     // Plugin not in config table, see if there's a driver for it
-                    if (is_file(self::getClassPath($pi_name))) {
+                    if (in_array($plugin, self::$local) ||
+                            is_file(self::getClassPath($pi_name))) {
                         $values[] = $pi_name;
                     }
                 }
