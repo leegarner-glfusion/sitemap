@@ -29,7 +29,7 @@ case 'toggleEnabled':
     switch ($_POST['type']) {
     case 'html':
     case 'xml':
-        $newval = smapConfig::toggle($_POST['id'], $_POST['type'], $_POST['oldval']);
+        $newval = smapConfig::toggleEnabled($_POST['id'], $_POST['type'], $_POST['oldval']);
         $newval_txt = $newval == 1 ? $LANG_SMAP['enabled'] : $LANG_SMAP['disabled'];
         break;
 

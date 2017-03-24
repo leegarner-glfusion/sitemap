@@ -437,7 +437,7 @@ class smapConfig
     *   @param  integer $oldtype    Current value, 1 or 0
     *   @return integer     New value, or old value on error
     */
-    public static function toggle($pi_name, $type, $oldval)
+    public static function toggleEnabled($pi_name, $type, $oldval)
     {
         global $_TABLES;
 
