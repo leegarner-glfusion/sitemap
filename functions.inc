@@ -404,29 +404,6 @@ function SITEMAP_createGoogleSitemap()
 
 
 /**
-*   Update the 'enabled' value for a sitemap.
-*   Called from the admin ajax.php script.
-*
-*  @param  integer $oldval  Current value
-*  @param  string  $fld     Field, smap or gsmap
-*  @return integer     New value, or old value if an error occurred
-*/
-function SMAP_toggleEnabled($pi_name, $fld, $oldval)
-{
-    global $_TABLES;
-
-    // Sanitize and set values
-    $oldval = $oldval == 1 ? 1 : 0;
-    $newval = $oldval == 0 ? 1 : 0;
-    DB_change($_TABLES['smap_maps'],
-                $fld . '_enabled', $newval,
-                'pi_name', DB_escapeString($pi_name));
-    CACHE_remove_instance('menu');
-    return DB_error() ? $oldval : $newval;
-}
-
-
-/**
 *   Check whether a visitor has access to view the online sitemap
 *   Also will return false if there are no sitemaps enabled.
 *

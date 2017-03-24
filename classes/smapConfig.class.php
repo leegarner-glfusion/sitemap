@@ -430,6 +430,33 @@ class smapConfig
 
 
     /**
+    *   Toggle the Enabled state for sitemap types
+    *
+    *   @param  string  $pi_name    Plugin (driver) name to update
+    *   @param  string  $type       Sitemap type (xml or html)
+    *   @param  integer $oldtype    Current value, 1 or 0
+    *   @return integer     New value, or old value on error
+    */
+    public static function toggle($pi_name, $type, $oldval)
+    {
+        global $_TABLES;
+
+        // Sanitize and set values
+        $oldval = $oldval == 1 ? 1 : 0;
+        $newval = $oldval == 0 ? 1 : 0;
+        DB_change($_TABLES['smap_maps'],
+                $type . '_enabled', $newval,
+                'pi_name', DB_escapeString($pi_name));
+        if (DB_error()) {
+            COM_errorLog("smapConfig::toggle() error: $sql");
+            return $oldval;
+        } else {
+            return $newval;
+        }
+    }
+
+
+    /**
     *   Clean up sitemap configs by removing uninstalled plugins
     *   and adding new ones. Calls Add() and Delete() without reordering
     *   and reloading until the end to avoid unnecessary DB activity.
