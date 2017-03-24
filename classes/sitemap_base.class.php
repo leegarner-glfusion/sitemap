@@ -66,6 +66,7 @@ class sitemap_base
     public function setXML()
     {
         $this->smap_type = 'xml';
+        $this->uid = 1;     // XML sitemaps are public, access as anonymous
     }
 
 
