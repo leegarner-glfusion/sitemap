@@ -55,8 +55,8 @@ function sitemap_do_upgrade()
         if (!sitemap_upgrade_2_0_0()) return false;
         $current_ver = '2.0.0';
     }
+    CTL_clearCache();
 
-    CTL_clearCache($_SMAP_CONF['pi_name']);
     COM_errorLog("Successfully updated the {$_SMAP_CONF['pi_display_name']} Plugin", 1);
     return true;
 }
