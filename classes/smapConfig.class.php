@@ -63,7 +63,7 @@ class smapConfig
         $sql = "SELECT * FROM {$_TABLES['smap_maps']}
                 WHERE pi_name='" . DB_escapeString($this->pi_name) . "'";
         $res = DB_query($sql, 1);
-        if (!$res || DB_numRows($res < 1)) {
+        if ($res == NULL || DB_numRows($res) < 1) {
             return false;
         } else {
             return $this->SetVars(DB_fetchArray($res, false));
@@ -412,17 +412,17 @@ class smapConfig
     {
         global $LANG_SMAP, $_TABLES, $_SMAP_MAPS;
 
+        $this->freq = $newfreq;
         // Make sure the new value is valid
         if (array_key_exists($newfreq, $LANG_SMAP['freqs'])) {
-            DB_change($_TABLES['smap_maps'], 'freq', $newfreq,
-                'pi_name', $this->pi_name);
+            DB_change($_TABLES['smap_maps'], 'freq', $newfreq,'pi_name', $this->pi_name);
             if (DB_error()) {
                 // Log error and return the old value
                 COM_errorLog("smapConfig::updateFreq error: $sql");
             } else {
                 // Update the in-memory config and return the new value
                 $this->freq = $newfreq;
-                $_SMAP_MAPS[$pi_name]['freq'] = $this->freq;
+                $_SMAP_MAPS[$this->pi_name]['freq'] = $this->freq;
             }
         }
         return $this->freq;
@@ -478,7 +478,7 @@ class smapConfig
             foreach ($plugins as $pi_name) {
                 if (!isset($_SMAP_MAPS[$pi_name])) {
                     // Plugin not in config table, see if there's a driver for it
-                    if (in_array($plugin, self::$local) ||
+                    if (in_array($pi_name, self::$local) ||
                             is_file(self::getClassPath($pi_name))) {
                         $values[] = $pi_name;
                     }
