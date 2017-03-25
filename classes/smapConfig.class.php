@@ -173,11 +173,8 @@ class smapConfig
         if (!DB_error()) {
             // After saving, reorder the fields
             self::reOrder();
-            return true;
-        } else {
-            COM_errorLog("smapConfig::Save Error: $sql");
-            return false;
         }
+        return true;
     }
 
 
@@ -204,11 +201,10 @@ class smapConfig
             $sql = "DELETE FROM {$_TABLES['smap_maps']}
                     WHERE pi_name IN ($values)";
             DB_query($sql, 1);
-            if (DB_error()) {
-                COM_errorLog("smapConfig::Delete() error: $sql");
-                return false;
-            } elseif ($reload) {
-                self::loadConfigs();
+            if (!DB_error()) {
+                if ($reload) {
+                    self::loadConfigs();
+                }
             }
         }
         return true;
@@ -229,8 +225,7 @@ class smapConfig
 
         if (!is_array($pi_names)) $pi_names = array($pi_names);
         foreach ($pi_names as $pi_name) {
-            $values[] = "('" . DB_escapeString($pi_name) . "',
-                1, 1, 999, 0.5)";
+            $values[] = "('" . DB_escapeString($pi_name) . "', 1, 1, 999, 0.5)";
         }
         if (!empty($values)) {
             $values = implode(', ', $values);
@@ -238,10 +233,7 @@ class smapConfig
                 (pi_name, html_enabled, xml_enabled, orderby, priority)
                 VALUES $values";
             DB_query($sql, 1);
-            if (DB_error()) {
-                COM_errorLog("smapConfig::Add() error: $sql");
-                return false;
-            } else {
+            if (!DB_error()) {
                 self::reOrder();
                 if ($reload) {
                     self::loadConfigs();
@@ -290,10 +282,8 @@ class smapConfig
         if (!DB_error()) {
             // Reorder fields to get them separated by 10
             return self::reOrder();
-        } else {
-            COM_errorLog("smapConfig::Move() error: $sql");
-            return false;
         }
+        return true;
     }
 
 
