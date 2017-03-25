@@ -6,7 +6,7 @@
 // |                                                                          |
 // | glFusion Auto Installer module                                           |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2009-2015 by the following authors:                        |
+// | Copyright (C) 2009-2017 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
 // +--------------------------------------------------------------------------+
@@ -31,7 +31,7 @@ if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
 
-global $_DB_dbms;
+global $_DB_dbms, $_SMAP_CONF, $_SMAP_MAPS;
 
 require_once dirname(__FILE__) . '/sitemap.php';
 require_once dirname(__FILE__) . '/sql/mysql_install.php';
