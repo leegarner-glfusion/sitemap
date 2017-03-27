@@ -102,7 +102,7 @@ function SITEMAP_getPriorityOptions($selected='')
 *   @param  array   $A          Array of all fieldname=>value pairs
 *   @param  array   $icon_arr   Array of icons (not used)
 */
-function SMAP_adminField($fieldname, $fieldvalue, $A, $icon_arr)
+function SMAP_adminField($fieldname, $fieldvalue, $A, $icon_arr, $extra)
 {
     global $_CONF, $LANG_ACCESS;
 
@@ -111,16 +111,23 @@ function SMAP_adminField($fieldname, $fieldvalue, $A, $icon_arr)
     switch($fieldname) {
     case 'action':
         // Change the order
-        $retval = COM_createLink(
+        if ($A['orderby'] > 10) {
+            $retval .= COM_createLink(
                 '<img src="' . $_CONF['layout_url'] .
                 '/images/up.png" height="16" width="16" border="0" />',
                 $_CONF['site_admin_url'] . '/plugins/sitemap/index.php?move=up&id=' . $A['pi_name']
-            ) .
-            COM_createLink(
+                );
+        } else {
+            $retval .= '<img src="' . $_CONF['layout_url'] .
+                '/images/blank.gif" height="16" width="16" border="0" />';
+        }
+        if ($A['orderby'] < $extra['map_count'] * 10) {
+            $retval .= COM_createLink(
                 '<img src="' . $_CONF['layout_url'] .
                     '/images/down.png" height="16" width="16" border="0" />',
                 $_CONF['site_admin_url'] . '/plugins/sitemap/index.php?move=down&id=' . $A['pi_name']
-            ) . LB;
+                );
+        }
         break;
 
     case 'xml_enabled':
@@ -194,9 +201,12 @@ function SMAP_adminList()
         ),
     );
     $defsort_arr = array('field' => 'orderby', 'direction' => 'asc');
+    $extra = array(
+        'map_count' => count($_SMAP_MAPS),
+    );
     $retval .= ADMIN_listArray('simpleList', 'SMAP_adminField',
                 $header_arr, '',
-                $_SMAP_MAPS, $defsort_arr, '', '',
+                $_SMAP_MAPS, $defsort_arr, '', $extra,
                 '', NULL);
 
     $T = new Template($_CONF['path'] . '/plugins/sitemap/templates');
