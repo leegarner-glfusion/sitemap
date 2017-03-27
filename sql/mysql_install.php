@@ -40,7 +40,7 @@ global $_TABLES;
 
 $_SQL['smap_maps'] = "CREATE TABLE `{$_TABLES['smap_maps']}` (
     `pi_name` varchar(40) NOT NULL,
-    `orderby` int(2) unsigned NOT NULL DEFAULT 999,
+    `orderby` int(2) NOT NULL DEFAULT 999,
     `priority` decimal(2,1) NOT NULL DEFAULT '0.5',
     `html_enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
     `xml_enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
@@ -59,7 +59,7 @@ $_SMAP_UPG_SQL = array(
     '2.0.0' => array(
         "CREATE TABLE `{$_TABLES['smap_maps']}` (
             `pi_name` varchar(40) NOT NULL,
-            `orderby` int(2) unsigned NOT NULL DEFAULT 999,
+            `orderby` int(2) NOT NULL DEFAULT 999,
             `priority` decimal(2,1) NOT NULL DEFAULT '0.5',
             `html_enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
             `xml_enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
