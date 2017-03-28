@@ -6,7 +6,7 @@
 // |                                                                          |
 // | English Language File (UTF-8 Version)                                    |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2009-2015 by the following authors:                        |
+// | Copyright (C) 2009-2017 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
 // |                                                                          |
@@ -123,6 +123,7 @@ $LANG_SMAP = array (
     'disabled'  => 'disabled',
     'uncategorized' => 'Uncategorized',
     'untitled' => 'Untitled',
+    'xml_sitemap_error' => 'Unable to create XML sitemap due to PHP configuration: \'short_open_tag\' must be set to Off',
 );
 
 // Localization of the Admin Configuration UI
@@ -151,5 +152,5 @@ $LANG_configselects['sitemap'] = array(
     3 => array('Yes' => 1, 'No' => 0),
     4 => array('No Access' => 0, 'Logged-In Only' => 1, 'All Users' => 2),
 );
- 
+
 ?>

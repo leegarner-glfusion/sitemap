@@ -261,7 +261,12 @@ case 'move':
     smapConfig::Move($_GET['id'], $actionval);
     break;
 case 'updatenow':
-    SITEMAP_createGoogleSitemap();
+    $st = ini_get('short_open_tag');
+    if( $st ) {
+        COM_setMsg($LANG_SMAP['xml_sitemap_error'],'error');
+    } else {
+        SITEMAP_createGoogleSitemap();
+    }
     break;
 }
 
