@@ -321,80 +321,13 @@ function SITEMAP_write($filename, $sitemap)
     return $retval;
 }
 
-/**
-*   Creates the Google Sitemap files.
-*   No return value.
-*   @uses   SITEMAP_write()
-*/
-function SITEMAP_createGoogleSitemap() {
-	global $_CONF, $_SMAP_CONF, $_SMAP_MAPS;
-
-	$retval = false;
-
-    USES_sitemap_class_base();
-    USES_sitemap_class_config();
-
-    smapConfig::loadConfigs();
-
-	$sitemap = '<?xml version="1.0" encoding="UTF-8"?>' . LB
-			 . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . LB;
-
-    foreach ($_SMAP_MAPS as $pi_name=>$config) {
-        // Skip disabled sitemaps
-        if (!$config['xml_enabled']) continue;
-
-        // Load the driver for the sitemap, if available
-        $classfile = smapConfig::getClassPath($pi_name);
-        if (is_file($classfile)) {
-            include_once $classfile;
-            $cls = 'sitemap_' . $pi_name;
-            if (class_exists($cls)) {
-                $C = new $cls();
-                $C->setXML();   // Mark as an XML sitemap
-                $items = $C->getItems();
-            }
-        }
-
-        // No driver found, or no items returned
-        if (empty($items)) continue;
-
-		foreach ($items as $item) {
-			$sitemap .= '  <url>' . LB
-					 .  '    <loc>' . $item['uri'] . '</loc>' . LB;
-
-			if ($item['date'] !== false) {
-				$sitemap .= '    <lastmod>' . SITEMAP_convertDate( $item['date'] ) . '</lastmod>' . LB;
-			} else {
-				$sitemap .= '    <lastmod>' . SITEMAP_convertDate(time()) . '</lastmod>' . LB;
-			}
-
-			$sitemap .= '    <changefreq>' . $config['freq'] . '</changefreq>' . LB;
-            $priority = $config['priority'] != 0.5 ? sprintf('%1.1f', (float)$config['priority']) : (float) 0.5;
-
-			if (($priority != 0.5) AND ($priority >= 0.0) AND ($priority <= 1.0)) {
-				$sitemap .= '    <priority>' . $priority . '</priority>' . LB;
-			}
-
-			$sitemap .= '  </url>' . LB;
-		}
-	}
-
-	// Footer
-	$sitemap .= '</urlset>' . LB;
-
-    // Writes the Google Sitemap
-    foreach (explode(';', $_SMAP_CONF['xml_filenames']) as $filename) {
-        $retval = ($retval || !SITEMAP_write($filename, $sitemap));
-    }
-    return !$retval;
-}
 
 /**
 *   Creates the Google Sitemap files.
 *   No return value.
 *   @uses   SITEMAP_write()
 */
-function SITEMAP_createGoogleSitemapTEMPLATE()
+function SITEMAP_createGoogleSitemap()
 {
     global $_CONF, $_SMAP_CONF, $_SMAP_MAPS;
 
@@ -402,6 +335,12 @@ function SITEMAP_createGoogleSitemapTEMPLATE()
     USES_sitemap_class_config();
 
     smapConfig::loadConfigs();
+
+    $st = ini_get('short_open_tag');
+    if( $st ) {
+        COM_errorLog("SITEMAP: Unable to create XML sitemap due to PHP configuration - 'short_open_tag' must be set to Off");
+        return false;
+    }
 
     $retval = false;
     $T = new Template(dirname(__FILE__) . '/templates');
