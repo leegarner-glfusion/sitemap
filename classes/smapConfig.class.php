@@ -223,9 +223,19 @@ class smapConfig
     {
         global $_TABLES;
 
+        $res = DB_query("SELECT MAX(orderby) AS maxorder FROM {$_TABLES['smap_maps']}");
+        if ( DB_numRows($res) > 0 ) {
+            $mo = DB_fetchArray($res);
+            $maxOrder = $mo['maxorder'];
+        } else {
+            $maxOrder = 10;
+        }
+
+
         if (!is_array($pi_names)) $pi_names = array($pi_names);
         foreach ($pi_names as $pi_name) {
-            $values[] = "('" . DB_escapeString($pi_name) . "', 1, 1, 999, 0.5)";
+            $maxOrder += 10;
+            $values[] = "('" . DB_escapeString($pi_name) . "', 1, 1, ".$maxOrder.", 0.5)";
         }
         if (!empty($values)) {
             $values = implode(', ', $values);
