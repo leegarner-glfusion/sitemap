@@ -86,7 +86,8 @@ class smapConfig
             break;
 
         case 'priority':
-            $this->properties[$name] = (float)$value;
+            // Ensure proper formatting regardless of locale
+            $this->properties[$name] = number_format((float)$value, 1, '.', '');
             break;
 
         case 'xml_enabled':
@@ -230,7 +231,6 @@ class smapConfig
         } else {
             $maxOrder = 10;
         }
-
 
         if (!is_array($pi_names)) $pi_names = array($pi_names);
         foreach ($pi_names as $pi_name) {

@@ -377,8 +377,8 @@ function SITEMAP_createGoogleSitemap()
                 'url'   => $item['uri'],
                 'date'  => $date,
                 'freq'  => $config['freq'],
-                'priority'  => $config['priority'] != 0.5 ?
-                        sprintf('%1.1f', (float)$config['priority']) : '',
+                'priority'  => $config['priority'] != '0.5' ?
+                        $config['priority'] : '',
             ) );
             $T->parse('item', 'smap_item', true);
         }
