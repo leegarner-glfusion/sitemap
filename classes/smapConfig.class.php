@@ -87,7 +87,7 @@ class smapConfig
 
         case 'priority':
             // Ensure proper formatting regardless of locale
-            $this->properties[$name] = number_format((float)$value, 1, '.');
+            $this->properties[$name] = number_format((float)$value, 1, '.', '');
             break;
 
         case 'xml_enabled':
