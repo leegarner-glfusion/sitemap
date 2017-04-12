@@ -38,18 +38,20 @@ the distribution from the Plugin Administration page.
 Global sitemap configuration is done through the glFusion Configuration panel.
 There are currently only three configuration options:
 1. Sitemap Name
-  * A semicolon-delimited list of filenames to use for the XML sitemap files.
-  * A filename beginning with "mobile" creats a mobile version of the sitemap.
-  * Default: sitemap.xml;mobile.xml
+    * A semicolon-delimited list of filenames to use for the XML sitemap files.
+    * A filename beginning with "mobile" creates a mobile version of the sitemap.
+    * Default: sitemap.xml;mobile.xml
 1. Who can view the online sitemap
-  * Determines whether anonymous users can view the HTML sitemap page at
-{site_url}/sitemap/. Has no effect on access to the XML sitemap files.
-  * All Users (Default)
-  * Logged-In Users Only
-  * No Access (Also disables the plugin menu)
+    * Determines whether anonymous users can view the HTML sitemap page at
+    {site_url}/sitemap/.
+    * Has no effect on access to the XML sitemap files.
+    * Options:
+      * All Users (Default)
+      * Logged-In Users Only
+      * No Access (Also disables the plugin menu)
 1. Automatically add new plugins?
-  * If "Yes", then newly-installed plugins which provide a sitemap driver will be added to the sitemaps.
-  * Default: Yes
+    * If "Yes", then newly-installed plugins which provide a sitemap driver will be added to the sitemaps.
+    * Default: Yes
 
 ## Plugin Integration
 A collection of sitemap drivers for the bundled plugins is included in the
