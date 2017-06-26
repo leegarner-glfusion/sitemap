@@ -75,9 +75,14 @@ Example:
 ```php
 class sitemap_myplugin extends sitemap_base
 {
-
     // Required. Define the plugin name.
     protected $name = 'myplugin';
+
+    // Optional default value overrides. Sets the values when installed,
+    // the site admin can change them via Command and Control
+    public $xml_enabled = 1;    // Default enabled, 0 to disable
+    public $html_enabled = 1;   // Default enabled, 0 to disable
+    public $priority = '0.5';   // Default, set a different priority if desired
 
     /**
     *   Get the entry point for the plugin. Typically this is
@@ -118,7 +123,8 @@ class sitemap_myplugin extends sitemap_base
 
     /**
     *   Get all the items for this plugin under the given category ID.
-    *   This function should be overridden.
+    *   This function should be overridden. For an XML sitemap to work,
+    *   all items should be returned when $cat_id == 0.
     *
     *   @param  mixed   $cat_id     Category ID
     *   @return array       Array of items, default is an empty array
