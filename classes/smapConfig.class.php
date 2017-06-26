@@ -232,14 +232,35 @@ class smapConfig
             $maxOrder = 10;
         }
 
-        if (!is_array($pi_names)) $pi_names = array($pi_names);
+        if (!is_array($pi_names)) {
+            $pi_names = array($pi_names);
+        }
+        USES_sitemap_class_base();
         foreach ($pi_names as $pi_name) {
+
+            // Get the default enabled flags and priority from the driver
+            $html = 1;
+            $xml = 1;
+            $prio = '0.5';
+            if (!in_array($pi_name, self::$local)) {
+                $classfile = self::getClassPath($pi_name);
+                if (is_file($classfile)) {
+                    include_once $classfile;
+                    $classname = 'sitemap_' . $pi_name;
+                    $S = new $classname();
+                    $html = (int)$S->html_enabled;
+                    $xml = (int)$S->xml_enabled;
+                    $priority = (float)$S->priority;
+                }
+            }
+
             $maxOrder += 10;
-            $values[] = "('" . DB_escapeString($pi_name) . "', 1, 1, ".$maxOrder.", 0.5)";
+            $values[] = "('" . DB_escapeString($pi_name) .
+                    "', $html, $xml, $maxOrder, $priority)";
         }
         if (!empty($values)) {
             $values = implode(', ', $values);
-            $sql = "INSERT INTO {$_TABLES['smap_maps']}
+            $sql = "INSERT IGNORE INTO {$_TABLES['smap_maps']}
                 (pi_name, html_enabled, xml_enabled, orderby, priority)
                 VALUES $values";
             DB_query($sql, 1);

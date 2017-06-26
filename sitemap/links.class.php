@@ -50,6 +50,7 @@ if (!defined ('GVERSION')) {
 class sitemap_links extends sitemap_base
 {
     var $name = 'links';
+    public $xml_enabled = 0;    // XML disabled by default
 
     public function getDisplayName()
     {

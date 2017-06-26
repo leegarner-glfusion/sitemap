@@ -25,6 +25,9 @@ class sitemap_base
     protected $smap_type;   // HTML or XML
     protected $name;        // Name of this plugin or sitemap type
     protected $config;      // Config elements for this driver
+    public $html_enabled = 1;   // Default html enabled
+    public $xml_enabled = 1;    // Default xml enabled
+    public $priority = '0.5';   // Default priority
 
     /**
     *   Constructor. Sets internal values to defaults
