@@ -52,7 +52,7 @@ $_TABLES['smap_maps'] = $_SMAP_table_prefix . 'smap_maps';
 // Plugin info
 $_SMAP_CONF['pi_name']          = 'sitemap';
 $_SMAP_CONF['pi_display_name']  = 'SiteMap';
-$_SMAP_CONF['pi_version']       = '2.0.0';
+$_SMAP_CONF['pi_version']       = '2.0.1';
 $_SMAP_CONF['gl_version']       = '1.6.0';
 $_SMAP_CONF['pi_url']           = 'https://www.glfusion.org/';
 
