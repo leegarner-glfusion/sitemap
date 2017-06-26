@@ -50,6 +50,7 @@ if (!defined ('GVERSION')) {
 class sitemap_links extends sitemap_base
 {
     var $name = 'links';
+    public $xml_enabled = 0;    // XML disabled by default
 
     public function getDisplayName()
     {
@@ -114,15 +115,17 @@ class sitemap_links extends sitemap_base
     *   'image_uri' => $image_uri (string)
     * )
     */
-    function getItems($category = 0)
+    public function getItems($category = 0)
     {
         global $_CONF, $_TABLES;
 
         $entries = array();
 
-        $sql  = "SELECT lid, title, UNIX_TIMESTAMP(date) AS date_u "
-              . "FROM {$_TABLES['links']} "
-              . "WHERE (cid ='" . DB_escapeString($category) . "') ";
+        $sql  = "SELECT lid, title, UNIX_TIMESTAMP(date) AS date_u
+                FROM {$_TABLES['links']} WHERE 1=1 ";
+        if ($category != 0) {
+            $sql .= "AND (cid ='" . DB_escapeString($category) . "') ";
+        }
 
         if ($this->uid > 0) {
             $sql .= COM_getPermSQL('AND', $this->uid);
