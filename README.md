@@ -1,5 +1,5 @@
 # SiteMap Plugin for glFusion
-Version: 2.0.0
+Version: 2.0.1
 
 For the latest documentation, please see
 

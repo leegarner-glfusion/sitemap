@@ -134,7 +134,8 @@ function plugin_autouninstall_sitemap()
 */
 function plugin_postinstall_sitemap()
 {
-    global $_SMAP_CONF, $_SMAP_MAPS;
+    global $_CONF, $_TABLES, $_SMAP_CONF, $_SMAP_MAPS;
+    require_once dirname(__FILE__) . '/functions.inc';
     require_once dirname(__FILE__) . '/classes/smapConfig.class.php';
 
     // Add the current plugins.

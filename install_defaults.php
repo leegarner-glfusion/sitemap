@@ -53,17 +53,14 @@ function plugin_initconfig_sitemap()
 {
     global $_SMAP_CONF, $_SMAP_DEFAULT;
 
-    $me = $_SMAP_CONF['pi_name'];
+    $me = 'sitemap';
     $c = config::get_instance();
     if (!$c->group_exists($me)) {
         $c->add('sg_main', NULL, 'subgroup', 0, 0, NULL, 0, true, $me);
         $c->add('fs_main', NULL, 'fieldset', 0, 0, NULL, 0, true, $me);
-        $c->add('xml_filenames', $_SMAP_DEFAULT['xml_filenames'],
-                'text', 0, 0, 0, 10, true, $me);
-        $c->add('view_access', $_SMAP_DEFAULT['view_access'],
-                'select', 0, 0, 4, 20, true, $me);
-        $c->add('auto_add_plugins', $_SMAP_DEFAULT['auto_add_plugins'],
-                'select', 0, 0, 3, 30, true, $me);
+        $c->add('xml_filenames', $_SMAP_DEFAULT['xml_filenames'],'text', 0, 0, 0, 10, true, $me);
+        $c->add('view_access', $_SMAP_DEFAULT['view_access'],'select', 0, 0, 4, 20, true, $me);
+        $c->add('auto_add_plugins', $_SMAP_DEFAULT['auto_add_plugins'],'select', 0, 0, 3, 30, true, $me);
     }
     return true;
 }

@@ -178,8 +178,9 @@ function plugin_getuseroption_sitemap()
 */
 function plugin_upgrade_sitemap()
 {
-    require_once dirname(__FILE__) . '/upgrade.inc.php';
-    return sitemap_do_upgrade();
+    global $_CONF, $_TABLES, $_SMAP_CONF;
+    require_once dirname(__FILE__) . '/upgrade.php';
+    return sitemap_upgrade();
 }
 
 
@@ -193,12 +194,11 @@ function plugin_getconfigelementhelp_sitemap($option, $doclang='english')
 {
     global $_CONF, $_SMAP_CONF;
 
-    $doc_path = $_CONF['path_html'] . $_SMAP_CONF['pi_name'] .
-                "/docs/$doclang/config.html";
+    $doc_path = $_CONF['path_html'] . "/docs/$doclang/config.html";
     if (!is_file($doc_path )) {
         $doclang = 'english';
     }
-    $doc_url = $_CONF['site_url'] . '/' . $_SMAP_CONF['pi_name'] .
+    $doc_url = $_CONF['site_url'] . '/' . 'sitemap' .
         '/docs/' . $doclang . '/config.html';
 
     if (!empty($option)) {

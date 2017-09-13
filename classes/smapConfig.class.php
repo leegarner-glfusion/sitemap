@@ -149,6 +149,10 @@ class smapConfig
     {
         global $_TABLES, $_CONF_FRM;
 
+        $sql1 = '';
+        $sql2 = '';
+        $sql3 = '';
+
         if (is_array($A))
             $this->SetVars($A);
 
@@ -553,7 +557,7 @@ class smapConfig
         // Check first for a plugin-supplied driver, then look for bundled
         $dirs = array(
             $pi_name,
-            $_SMAP_CONF['pi_name'],
+            'sitemap',
         );
 
         foreach ($dirs as $dir) {

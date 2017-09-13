@@ -1,12 +1,12 @@
-# Sitemap plugin for glFusion - Changelog
+SiteMap Plugin ChangeLog
 
 ## v2.0.1 (Unreleased)
+  - PHP v7.x compatibility fixes
+  - Allow drivers to set default xml_enabled, html_enabled and priority values
+  - Fix SQL query for Links XML sitemap
+  - Upgrade cleanup
 
--   Allow drivers to set default xml_enabled, html_enabled and priority values
--   Fix SQL query for Links XML sitemap
-
-## v2.0.0 (2-17-04-17)
-
+## v2.0.0 (April 12, 2017)
   - Remove dependency on the Dataproxy plugin.
   - Move global configuration items to the glFusion configuration system
   - Use standard admin lists with AJAX for sitemap element configurations
