@@ -75,7 +75,7 @@ function sitemap_upgrade()
             // reload config
             $configT = config::get_instance();
             $_SMAP_CONF = $configT->get_config('sitemap');
-            include dirname(__FILE__) . '/sitemap.php';
+            include __DIR__ . '/sitemap.php';
 
             // do database updates
             // $_SQL is set in mysql_install.php
@@ -149,6 +149,7 @@ function sitemap_upgrade()
     }
 
     CTL_clearCache();
+    SITEMAP_clearCache();
 
     if ( DB_getItem($_TABLES['plugins'],'pi_version',"pi_name='sitemap'") == $_SMAP_CONF['pi_version']) {
         return true;

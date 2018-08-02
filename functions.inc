@@ -6,7 +6,7 @@
 // |                                                                          |
 // | glFusion Plugin API functions and support functions                      |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2009-2017 by the following authors:                        |
+// | Copyright (C) 2009-2018 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
 // | Lee Garner             lee AT leegarner DOT com                          |
@@ -41,12 +41,12 @@ if (!defined ('GVERSION')) {
 /**
 * Language file Include
 */
-$langfile = dirname(__FILE__) . '/language/'.$_CONF['language'].'.php';
+$langfile = __DIR__ . '/language/'.$_CONF['language'].'.php';
 clearstatcache();
 if (file_exists($langfile)) {
     include_once $langfile;
 } else {
-    include_once dirname(__FILE__) . '/language/english.php';
+    include_once __DIR__ . '/language/english.php';
 }
 
 global $_SMAP_MAPS;
@@ -57,19 +57,19 @@ global $_SMAP_CONF;
 require_once $_CONF['path_system'] . 'classes/config.class.php';
 $config = config::get_instance();
 $_SMAP_CONF = $config->get_config('sitemap');
-require_once dirname(__FILE__) . '/sitemap.php';
+require_once __DIR__ . '/sitemap.php';
 
 /** Import static config values */
-if (file_exists(dirname(__FILE__) . '/config.php')) {
+if (file_exists(__DIR__ . '/config.php')) {
     /** Import local configuration overrides, if any */
-    include_once dirname(__FILE__) . '/config.php';
+    include_once __DIR__ . '/config.php';
 }
 
 function USES_sitemap_class_config()
-{   require_once dirname(__FILE__) . '/classes/smapConfig.class.php'; }
+{   require_once __DIR__ . '/classes/smapConfig.class.php'; }
 
 function USES_sitemap_class_base()
-{   require_once dirname(__FILE__) . '/classes/sitemap_base.class.php'; }
+{   require_once __DIR__ . '/classes/sitemap_base.class.php'; }
 
 
 // +---------------------------------------------------------------------------+
@@ -179,7 +179,7 @@ function plugin_getuseroption_sitemap()
 function plugin_upgrade_sitemap()
 {
     global $_CONF, $_TABLES, $_SMAP_CONF;
-    require_once dirname(__FILE__) . '/upgrade.php';
+    require_once __DIR__ . '/upgrade.php';
     return sitemap_upgrade();
 }
 
@@ -346,12 +346,10 @@ function SITEMAP_createGoogleSitemap()
     // case where other content is saved while the sitemap is running.
     // This is done regardless of the config setting so that forced runs will
     // clear the counters also.
-    DB_query("UPDATE {$_TABLES['vars']}
-            SET value = 0
-            WHERE name = 'sitemap_changes'");
+    SITEMAP_updateCounter(0);
 
     $retval = false;
-    $T = new Template(dirname(__FILE__) . '/templates');
+    $T = new Template(__DIR__ . '/templates');
     $T->set_file('smap', 'smap_google.thtml');
 
     $T->set_block('smap', 'smap_item', 'item');
@@ -366,9 +364,20 @@ function SITEMAP_createGoogleSitemap()
             include_once $classfile;
             $cls = 'sitemap_' . $pi_name;
             if (class_exists($cls)) {
-                $C = new $cls();
-                $C->setXML();   // Mark as an XML sitemap
-                $items = $C->getItems();
+                $driver = new $cls();
+                $driver->setXML();   // Mark as an XML sitemap
+                if (version_compare(GVERSION, '2.0.0', '>=')) {
+                    $c = \glFusion\Cache::getInstance();
+                    $key = $c->createKey($cls . '_xml');
+                    if ($c->has($key)) {
+                        $items = $c->get($key);
+                    } else {
+                        $items = $driver->getItems();
+                        $c->set($key, $items, array('sitemap', $cls));
+                    }
+                } else {
+                    $items = $driver->getItems($pid);
+                }
             }
         }
 
@@ -474,13 +483,85 @@ function plugin_runScheduledTask_sitemap()
 */
 function plugin_itemsaved_sitemap($id, $type, $old_id = '')
 {
-    global $_TABLES, $_SMAP_CONF;
+    global $_SMAP_CONF, $_SMAP_CONF, $_SMAP_MAPS;
 
-    if ($_SMAP_CONF['schedule'] == 1) {
-        DB_query("UPDATE {$_TABLES['vars']}
-                SET value = value + 1
-                WHERE name = 'sitemap_changes'");
+    USES_sitemap_class_config();
+    smapConfig::loadConfigs();
+    if ($_SMAP_CONF['schedule'] == 1 &&
+        isset($_SMAP_MAPS[$type]) && $_SMAP_MAPS[$type]['xml_enabled']) {
+        SITEMAP_updateCounter();
     }
+    SITEMAP_clearCache($type);
+}
+
+
+/**
+*   Handle deletion of content items.
+*   Clears the cache for the type of item deleted so the sitemap will be
+*   rebuilt with current data.
+*
+*   @param  string  $id     Item ID (not used)
+*   @param  string  $type   Type of item, e.g. plugin name
+*   @param  boolean $children   Not used
+*/
+function plugin_itemdeleted_sitemap($id, $type, $children)
+{
+    global $_SMAP_CONF, $_SMAP_MAPS;
+
+    SITEMAP_clearCache($type);
+    USES_sitemap_class_config();
+    smapConfig::loadConfigs();
+    if ($_SMAP_CONF['schedule'] == 1 &&
+        isset($_SMAP_MAPS[$type]) && $_SMAP_MAPS[$type]['xml_enabled']) {
+         SITEMAP_updateCounter();    // To force regeneration
+    }
+}
+
+
+/**
+*   Update the vars table with the number of changes, or 0 to clear
+*
+*   @param  integer $cnt    Update count, either 1 to add or 0 to clear
+*/
+function SITEMAP_updateCounter($cnt = 1)
+{
+    global $_TABLES;
+
+    $change = $cnt == 0 ? '0' : 'value + 1';
+    DB_query("UPDATE {$_TABLES['vars']}
+            SET value = $change
+            WHERE name = 'sitemap_changes'");
+}
+
+
+/**
+ * Clear cached items from the sitemap.
+ * Called when item is saved or deleted. Entire cache is cleared if a plugin
+ * name is not specified.
+ *
+ * @param   string  $item_type  Item type (plugin name)
+ */
+function SITEMAP_clearCache($item_type = '')
+{
+    global $_SMAP_CONF;
+
+    if (version_compare(GVERSION, '2.0.0', '<')) {
+        return;         // Caching not supported
+    }
+
+    // If item_type is not supplied, delete all items.
+    // Thie happend during update and removal
+    if ($item_type == '') {
+        $tags = array(
+            $_SMAP_CONF['pi_name'],
+        );
+    } else {
+        $tags = array(
+            $_SMAP_CONF['pi_name'] . '_' . $item_type,
+            $_SMAP_CONF['pi_name'] . '_' . $item_type . '_category',
+        );
+    }
+    \glFusion\Cache::getInstance()->deleteItemsByTags($tags);
 }
 
 ?>
