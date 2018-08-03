@@ -113,7 +113,7 @@ function plugin_install_sitemap()
 */
 function plugin_autouninstall_sitemap()
 {
-    Sitemap\Cache:clear();
+    Sitemap\Cache::clear();
 
     $out = array (
         /* give the name of the tables, without $_TABLES[] */
