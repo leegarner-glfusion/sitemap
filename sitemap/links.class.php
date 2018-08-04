@@ -49,15 +49,13 @@ if (!defined ('GVERSION')) {
 
 class sitemap_links extends sitemap_base
 {
-    var $name = 'links';
-    public $xml_enabled = 0;    // XML disabled by default
+    protected $name = 'links';
 
     public function getDisplayName()
     {
         global $LANG_LINKS;
         return $LANG_LINKS[14];
     }
-
 
     /**
     * @param $pid int/string/boolean id of the parent category.  False means
@@ -85,6 +83,7 @@ class sitemap_links extends sitemap_base
         if ($this->uid > 0) {
             $sql .= COM_getPermSQL('AND', $this->uid);
         }
+
         $result = DB_query($sql, 1);
         if (DB_error()) {
             COM_errorLog("sitemap_links::getChildCategories() error: $sql");
@@ -96,8 +95,7 @@ class sitemap_links extends sitemap_base
                 'id'        => $A['cid'],
                 'pid'       => $A['pid'],
                 'title'     => $A['category'],
-                'uri'       => self::getEntryPoint() . '?category='
-                                . urlencode($A['cid']),
+                'uri'       => self::getEntryPoint() . '?category='.urlencode($A['cid']),
                 'date'      => strtotime($A['modified']),
                 'image_uri' => false,
             );
@@ -124,7 +122,7 @@ class sitemap_links extends sitemap_base
         $sql  = "SELECT lid, title, UNIX_TIMESTAMP(date) AS date_u
                 FROM {$_TABLES['links']} WHERE 1=1 ";
         if (!empty($category)) {
-            $sql .= "AND (cid ='" . DB_escapeString($category) . "') ";
+            $sql .= "AND (cid = '".DB_escapeString($category)."') ";
         }
 
         if ($this->uid > 0) {
