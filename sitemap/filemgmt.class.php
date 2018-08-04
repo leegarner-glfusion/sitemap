@@ -113,16 +113,23 @@ class sitemap_filemgmt extends sitemap_base
 
         if ($cid === false) $cid = 0;
 
+        if ($cid == 0) {
+            $where = "WHERE 1=1 ";
+        } else {
+            $where = "WHERE (f.cid = '".DB_escapeString($cid)."') ";
+        }
+
         $entries = array();
 
         $sql = "SELECT lid, f.title, logourl, date
                 FROM {$_TABLES['filemgmt_filedetail']} AS f
                 LEFT JOIN {$_TABLES['filemgmt_cat']} AS c
-                ON f.cid = c.cid
-                WHERE (f.cid = '" . DB_escapeString($cid) . "') ";
+                ON f.cid = c.cid " . $where . " ";
+
         if ($this->uid > 0) {
             $sql .= SEC_buildAccessSql('AND', 'c.grp_access');
         }
+
         $result = DB_query($sql, 1);
         if (DB_error()) {
             COM_errorLog("sitemap_filemgmt::getItems() error: $sql");
