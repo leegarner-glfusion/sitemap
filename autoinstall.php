@@ -145,7 +145,7 @@ function plugin_postinstall_sitemap()
     // Add the current plugins.
     // Configs haven't been loaded at this point, so fake them.
     $_SMAP_CONF['auto_add_plugins'] = 1;
-    Sitemap\smapConfig::updateConfigs();
+    Sitemap\Config::updateConfigs();
 }
 
 
