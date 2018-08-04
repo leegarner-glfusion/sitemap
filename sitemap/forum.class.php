@@ -99,10 +99,26 @@ class sitemap_forum extends sitemap_base
 
         $entries = array();
 
-        $sql = "SELECT id, subject, lastupdated FROM {$_TABLES['ff_topic']}
-                WHERE (pid = 0) AND (forum = '" . DB_escapeString($forum_id) ."')
-                ORDER BY lastupdated DESC";
-        $result = DB_query($sql, 1);
+        if ($forum_id === false) {
+            $groups = array ();
+            $usergroups = SEC_getUserGroups(1);
+            foreach ($usergroups as $group) {
+                $groups[] = $group;
+            }
+            $grouplist = implode(',',$groups);
+
+            $sql  = "SELECT a.id, a.subject, a.lastupdated, b.grp_id
+                    FROM {$_TABLES['ff_topic']} a
+                    LEFT JOIN {$_TABLES['ff_forums']} b ON a.forum = b.forum_id ";
+            $sql .= "WHERE (pid=0) AND b.grp_id IN ($grouplist) ORDER BY a.lastupdated DESC";
+        } else {
+            $sql = "SELECT id, subject, lastupdated FROM {$_TABLES['ff_topic']}
+                    WHERE (pid = 0) AND (forum = '" . DB_escapeString($forum_id) ."')
+                    ORDER BY lastupdated DESC";
+        }
+
+        $result = DB_query($sql,1);
+
         if (DB_error()) {
             COM_errorLog("sitemap_forum::getItems() error: $sql");
             return $entries;
@@ -112,8 +128,7 @@ class sitemap_forum extends sitemap_base
             $entries[] = array(
                 'id'        => $A['id'],
                 'title'     => $A['subject'],
-                'uri'       => $_CONF['site_url'] . '/forum/viewtopic.php?showtopic='
-                                . $A['id'],
+                'uri'       => $_CONF['site_url'] . '/forum/viewtopic.php?showtopic='.$A['id'],
                 'date'      => $A['lastupdated'],
                 'image_uri' => false,
             );
