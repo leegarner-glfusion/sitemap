@@ -112,9 +112,7 @@ class filemgmt extends BaseDriver
     {
         global $_CONF, $_TABLES, $_TABLES;
 
-        if ($cid === false) $cid = 0;
-        
-        if ($cid == 0) {
+        if ($cid === false) {
             $where = "WHERE 1=1 ";
         } else {
             $where = "WHERE (f.cid = '".DB_escapeString($cid)."') ";
