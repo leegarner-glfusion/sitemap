@@ -69,7 +69,7 @@ spl_autoload_register(function ($class)
         // Loading a driver class. Could be bundled with this plugin
         // or provided by another, so get the first path found.
         $class = str_replace('Sitemap\\Drivers\\', '', $class);
-        $path = Sitemap\Config::getDriverPath($class);
+        $path = Sitemap\Config::getDriverPath($class, false);   // no legacy
     } elseif (strpos($class, 'Sitemap\\') === 0) {
         // Loading an internal class. Eventually all classes should be
         // namespaced.
@@ -82,13 +82,13 @@ spl_autoload_register(function ($class)
     } elseif (strpos($class, 'sitemap_') === 0) {
         // Legacy mode. Load the sitemap_pluginname driver.
         $class = str_replace('sitemap_', '', $class);
-        $path = Sitemap\Config::getDriverPath($class);
+        $path = $_CONF['path'] . 'plugins/' . $class . '/sitemap/' . $class . '.class.php';
     } else {
         // Not a sitemap class, so just return.
         return;
     }
 
-    if (file_exists($path)) {
+    if (is_file($path)) {
         include $path;
     }
 });
