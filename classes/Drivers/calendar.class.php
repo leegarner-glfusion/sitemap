@@ -89,22 +89,28 @@ class calendar extends BaseDriver
     *       'image_uri' => $image_uri (string)
     *   )
     */
-    function getItems($category = '')
+    function getItems($category = '*')
     {
         global $_CONF, $_TABLES;
 
         $entries = array();
 
+        if ($category == '*') {
+            $categorySQL = '';
+        } else {
+            $categorySQL = ' AND event_type = "'.DB_escapeString($category).'" ';
+        }
+
         $sql = "SELECT eid, title, datestart,timestart
                 FROM {$_TABLES['events']}
-                WHERE (status=1
-                    AND event_type = '" . DB_escapeString($category) . "') ";
+                WHERE (status=1 " . $categorySQL . ") ";
+
         if ($this->uid > 0) {
             $sql .= COM_getPermSql('AND', $this->uid);
         }
         $sql .= ' ORDER BY datestart DESC, timestart DESC';
 
-        $result = DB_query($sql, 1);
+        $result = DB_query($sql);
         if (DB_error()) {
             COM_errorLog("sitemap_calendar::getItems() error: $sql");
             return $entries;
