@@ -513,7 +513,7 @@ function plugin_itemdeleted_sitemap($id, $type, $children)
     if ($_SMAP_CONF['schedule'] == 1) {
          SITEMAP_updateCounter();    // To force regeneration
     }
-    \glFusion\Cache::getInstance()->deleteItemsByTags($id);
+    Sitemap\Cache::clear($type);
 }
 
 
