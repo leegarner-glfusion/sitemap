@@ -78,6 +78,8 @@ class dokuwiki extends BaseDriver
 
         $ns  = utf8_encodeFN(str_replace(':','/',$ns));
 
+        if (empty($ns)) $ns = 'start';
+
         search($data,$conf['datadir'],'search_index',array('ns' => $ns));
 
         $entries = array();
@@ -136,6 +138,8 @@ class dokuwiki extends BaseDriver
 
         $pages = array();
         $ns  = utf8_encodeFN(str_replace(':','/',$category));
+
+        if (empty($ns)) $ns = 'start';
 
         switch ($this->smap_type ) {
             case 'xml' :
