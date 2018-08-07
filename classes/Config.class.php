@@ -512,10 +512,9 @@ class Config
     *   invalid result to BaseDriver::getDriver().
     *
     *   @param  string  $pi_name    Name of plugin
-    *   @param  boolean $legach     Include legacy paths?
     *   @return string      Path to driver file, or NULL if not found
     */
-    public static function getDriverPath($pi_name, $legacy = true)
+    public static function getDriverPath($pi_name)
     {
         global $_CONF, $_SMAP_CONF;
         static $paths = array();
@@ -524,21 +523,19 @@ class Config
         // The autoloader fixes the path to pi_name/sitemap, so make sure
         // that directory is not checked here.
         $dirs = array(
-            $pi_name . '/classes/Sitemap/' => true,     // New namespaced driver
-            $pi_name . '/sitemap/'      => $legacy,     // Legacy, no namespace
-            'sitemap/classes/Drivers/'  => true,        // Bundled driver if no others found
+            $pi_name . '/classes/Sitemap/',     // New namespaced driver
+            $pi_name . '/sitemap/',             // Legacy, no namespace
+            'sitemap/classes/Drivers/',         // Bundled driver if no others found
         );
 
         if (!array_key_exists($pi_name, $paths)) {
             $paths[$pi_name] = NULL;
-            foreach ($dirs as $dir => $enabled) {
-                if ($enabled) {
-                    $path = $_CONF['path'] . '/plugins/' . $dir .
-                        $pi_name . '.class.php';
-                    if (is_file($path)) {
-                        $paths[$pi_name] = $path;
-                        break;
-                    }
+            foreach ($dirs as $dir) {
+                $path = $_CONF['path'] . '/plugins/' . $dir .
+                    $pi_name . '.class.php';
+                if (is_file($path)) {
+                    $paths[$pi_name] = $path;
+                    break;
                 }
             }
         }
