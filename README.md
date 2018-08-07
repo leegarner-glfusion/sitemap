@@ -1,5 +1,5 @@
 # SiteMap Plugin for glFusion
-Version: 2.0.1
+Version: 2.0.2
 
 For the latest documentation, please see
 
@@ -23,7 +23,7 @@ user has permissions to view.
 SiteMap has the following system requirements:
 
     * PHP 5.6.0 and higher.
-    * glFusion v1.6.0 or newer
+    * glFusion v1.7.0 or newer
 
 ## Installation
 The SiteMap  Plugin uses the glFusion automated plugin installer.
