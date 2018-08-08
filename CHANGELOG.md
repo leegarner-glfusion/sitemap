@@ -1,6 +1,6 @@
 SiteMap Plugin ChangeLog
 
-## v2.0.2 (unreleased)
+## v2.0.2 (August 8, 2018)
   - Use glFusion date class
   - Fixed error in Calendar driver calculating date
   - Implement caching for glFusion 2.0.0+
