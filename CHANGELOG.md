@@ -1,5 +1,8 @@
 SiteMap Plugin ChangeLog
 
+## v2.0.3 (unreleased)
+  - Fixed install / uninstall error where Cache class may not be available via auto loader
+
 ## v2.0.2 (August 8, 2018)
   - Use glFusion date class
   - Fixed error in Calendar driver calculating date
