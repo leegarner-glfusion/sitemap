@@ -6,7 +6,7 @@
 // |                                                                          |
 // | glFusion Auto Installer module                                           |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2009-2017 by the following authors:                        |
+// | Copyright (C) 2009-2018 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
 // +--------------------------------------------------------------------------+
@@ -113,6 +113,11 @@ function plugin_install_sitemap()
 */
 function plugin_autouninstall_sitemap()
 {
+    global $_CONF;
+
+    // auto loader may not be available at this point
+    require_once $_CONF['path'].'plugins/sitemap/classes/Cache.class.php';
+
     Sitemap\Cache::clear();
 
     $out = array (
