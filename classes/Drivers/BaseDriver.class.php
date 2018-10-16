@@ -241,7 +241,7 @@ class BaseDriver
         if ($path) {
             include_once $path;
         }
-        COM_errorLog($path);
+//        COM_errorLog($path);
 
         // First try to find a namespaced driver
         $cls = '\\Sitemap\\Drivers\\' . $pi_name;
